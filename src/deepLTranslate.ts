@@ -5,7 +5,7 @@ const querystring = require('querystring');
 import { workspace } from 'vscode';
 import { ITranslate, ITranslateOptions } from 'comment-translate-manager';
 
-const PREFIXCONFIG = 'commentTranslate.deeplTranslate';
+const PREFIXCONFIG = 'deeplTranslate';
 
 const langMaps: Map<string, string> = new Map([
     ['zh-CN', 'ZH'],
