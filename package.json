@@ -9,6 +9,14 @@
   "categories": [
     "Other"
   ],
+  "homepage": "https://github.com/intellism/deepl-translate#readme",
+    "bugs": {
+        "url": "https://github.com/intellism/deepl-translate/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/intellism/deepl-translate.git"
+    },
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
