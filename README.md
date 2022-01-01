@@ -9,7 +9,7 @@ The plugin provides a translation source for the ‘comment-translate’ plugin.
 
 ## Requirements
 
-Please install 'comment-translate' to use
+Please install '[comment-translate](https://github.com/intellism/vscode-comment-translate)' to use
 
 ## Extension Settings
 
