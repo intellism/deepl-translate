@@ -3,6 +3,7 @@
   "displayName": "deepl-translate",
   "description": "deepl translate source for comment-translate",
   "version": "0.0.1",
+  "publisher": "intellsmi",
   "engines": {
     "vscode": "^1.63.0"
   },
