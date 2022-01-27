@@ -11,6 +11,13 @@ The plugin provides a translation source for the ‘comment-translate’ plugin.
 
 Please install '[comment-translate](https://github.com/intellism/vscode-comment-translate)' to use
 
+## Use
+1. After installation, call the "Change translation source" command of "Comment Translate"
+    ![change](./image/change.png)
+2. Check "Deepl translate" to configure the plugin API Key
+    ![select](./image/select.png)
+3. Directly use the "Comment Translate" interactive mode to translate the corresponding text
+
 ## Extension Settings
 
 This extension contributes the following settings:

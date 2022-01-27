@@ -2,7 +2,7 @@
   "name": "deepl-translate",
   "displayName": "deepl-translate",
   "description": "deepl translate source for comment-translate",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "intellsmi",
   "engines": {
     "vscode": "^1.63.0"
@@ -10,16 +10,29 @@
   "categories": [
     "Other"
   ],
+  "keywords": [
+    "translateSource",
+    "comment translate",
+    "deepl",
+    "deepl translate",
+    "翻译",
+    "注释",
+    "翻訳"
+  ],
   "homepage": "https://github.com/intellism/deepl-translate#readme",
-    "bugs": {
-        "url": "https://github.com/intellism/deepl-translate/issues"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/intellism/deepl-translate.git"
-    },
+  "bugs": {
+    "url": "https://github.com/intellism/deepl-translate/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/intellism/deepl-translate.git"
+  },
   "activationEvents": [],
   "main": "./out/extension.js",
+  "icon": "image/logo.png",
+  "extensionDependencies": [
+    "intellsmi.comment-translate"
+  ],
   "contributes": {
     "configuration": [
       {
