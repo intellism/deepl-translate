@@ -1,6 +1,6 @@
 {
-  "name": "ai-comment-translate",
-  "displayName": "ai-comment-translate",
+  "name": "ai-powered-comment-translate-extension",
+  "displayName": "Comment Translate for AI",
   "description": "This is an extension for the Comment Translate plugin, enabling it to utilize OpenAI's API for translation through large model calls.",
   "version": "0.0.1",
   "publisher": "Cheng-MaoMao",
@@ -8,14 +8,14 @@
     "vscode": "^1.85.0"
   },
   "categories": [
-    "AI"
+    "AI",
+    "Chat"
   ],
   "keywords": [
     "translateSource",
     "comment translate",
     "ai",
     "AI translate",
-    "ai-comment-translate",
     "翻译",
     "注释",
     "翻訳"
@@ -63,7 +63,7 @@
     },
     "translates": [
       {
-        "translate": "ai-comment-translate",
+        "translate": "ai-powered-comment-translate-extension",
         "title": "AI translate"
       }
     ]
