@@ -55,6 +55,10 @@ Issues and Pull Requests are welcome!
 
 - 🔧 Modify setting name
 
+### 0.0.3
+
+- 🔧 Add Model Temperature setting
+
 ## 🙏 Acknowledgments
 
 This project is developed based on the following excellent open-source projects:

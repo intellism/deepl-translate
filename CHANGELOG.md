@@ -10,6 +10,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Changed
 
+- 添加Model Temperature设置
+
+## [0.0.3] - 2024-12-28
+
+### Changed
+
 - 修改设置名称
 
 ## [0.0.2] - 2024-12-28
