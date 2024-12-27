@@ -1,31 +1,32 @@
 {
-  "name": "deepl-translate",
-  "displayName": "deepl-translate",
-  "description": "deepl translate source for comment-translate",
-  "version": "0.0.2",
-  "publisher": "intellsmi",
+  "name": "comment-translate-ai",
+  "displayName": "comment-translate-ai",
+  "description": "This is an extension for the Comment Translate plugin, enabling it to utilize OpenAI's API for translation through large model calls.",
+  "version": "0.0.1",
+  "publisher": "Cheng-MaoMao",
   "engines": {
-    "vscode": "^1.63.0"
+    "vscode": "^1.85.0"
   },
   "categories": [
-    "Other"
+    "AI"
   ],
   "keywords": [
     "translateSource",
     "comment translate",
-    "deepl",
-    "deepl translate",
+    "ai",
+    "AI translate",
+    "comment-translate-ai",
     "翻译",
     "注释",
     "翻訳"
   ],
-  "homepage": "https://github.com/intellism/deepl-translate#readme",
+  "homepage": "https://github.com/Cheng-MaoMao/comment-translate-ai#readme",
   "bugs": {
-    "url": "https://github.com/intellism/deepl-translate/issues"
+    "url": "https://github.com/Cheng-MaoMao/comment-translate-ai/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/intellism/deepl-translate.git"
+    "url": "https://github.com/Cheng-MaoMao/comment-translate-ai.git"
   },
   "activationEvents": [],
   "main": "./out/extension.js",
@@ -34,46 +35,36 @@
     "intellsmi.comment-translate"
   ],
   "contributes": {
-    "configuration": [
-      {
-        "title": "DeepL translate Configuration",
-        "type": "Object",
-        "properties": {
-          "deeplTranslate.apiFree": {
-            "type": "boolean",
-            "description": "apiFree",
-            "default": true
-          },
-          "deeplTranslate.authKey": {
-            "type": "string",
-            "markdownDescription": "You need an authentication key to access to the API.[Accessing the API](https://www.deepl.com/zh/docs-api/accessing-the-api/)"
-          },
-          "deeplTranslate.preserveFormatting": {
-            "type": "string",
-            "enum": [
-              "0",
-              "1"
-            ],
-            "default": "0",
-            "markdownDescription": "Sets whether the translation engine should respect the original formatting, even if it would usually correct some aspects. [More](https://www.deepl.com/zh/docs-api/translating-text/request/)"
-          },
-          "deeplTranslate.formality": {
-            "type": "string",
-            "enum": [
-              "default",
-              "more",
-              "less"
-            ],
-            "default": "default",
-            "markdownDescription": "Sets whether the translated text should lean towards formal or informal language. [More](https://www.deepl.com/zh/docs-api/translating-text/request/)"
-          }
+    "configuration": {
+      "title": "AI Translate",
+      "properties": {
+        "aiTranslate.largeModelApi": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "大模型 API 地址"
+        },
+        "aiTranslate.largeModelKey": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "大模型 API Key"
+        },
+        "aiTranslate.largeModelName": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "大模型名称"
+        },
+        "aiTranslate.largeModelMaxTokens": {
+          "type": "number",
+          "default": 2048,
+          "minimum": 0,
+          "markdownDescription": "大模型最大 token 数量 (设置为 0 则不限制)"
         }
       }
-    ],
+    },
     "translates": [
       {
-        "translate": "deepl",
-        "title": "DeepL translate"
+        "translate": "comment-translate-ai",
+        "title": "AI translate"
       }
     ]
   },
@@ -99,8 +90,8 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
-    "axios": "0.21.4",
-    "comment-translate-manager": "^0.0.2",
+    "axios": "^1.x.x",
+    "comment-translate-manager": "^1.x.x",
     "querystring": "^0.2.1"
   }
 }

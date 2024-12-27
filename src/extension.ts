@@ -1,17 +1,17 @@
 import { ITranslateRegistry } from 'comment-translate-manager';
 import * as vscode from 'vscode';
-import { DeepLTranslate } from './deepLTranslate';
+import { AiTranslate } from './AiTranslate';
 
 export function activate(context: vscode.ExtensionContext) {
-	
 
-	//Expose the plug-in
-	return {
+
+    //公开插件
+    return {
         extendTranslate: function (registry: ITranslateRegistry) {
-            registry('deepl', DeepLTranslate);
+            registry('comment-translate-ai', AiTranslate);
         }
     };
 }
 
-// this method is called when your extension is deactivated
-export function deactivate() {}
+// 当您的扩展被停用时，将调用此方法
+export function deactivate() { }

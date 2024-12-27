@@ -1,40 +1,69 @@
-# deepl-translate README
+# Comment Translate AI
 
-The plugin provides a translation source for the ‘comment-translate’ plugin. Itself does not activate, it starts when enabled is selected.
+基于大语言模型的 VSCode 代码注释翻译插件，作为 [Comment Translate](https://github.com/intellism/vscode-comment-translate) 的翻译源扩展。
 
-## Features
+[简体中文](README.md)
 
-1. Provide translation capabilities
-2. Provides online document link text
+## ✨ 特性
 
-## Requirements
+- 🤖 采用OpenAI的API调用规范
+- 🎯 专业的编程术语翻译
+- ⚡ 快速的翻译响应
+- 🛠️ 灵活的配置选项
 
-Please install '[comment-translate](https://github.com/intellism/vscode-comment-translate)' to use
+## 📦 安装
 
-## Use
-1. After installation, call the "Change translation source" command of "Comment Translate"
-    ![change](./image/change.png)
-2. Check "Deepl translate" to configure the plugin API Key
-    ![select](./image/select.png)
-3. Directly use the "Comment Translate" interactive mode to translate the corresponding text
+1. 安装 [Comment Translate](https://github.com/intellism/vscode-comment-translate)
+2. 安装本插件
+3. 在 VS Code 中打开命令面板 (Ctrl+Shift+P)
+4. 输入 "Comment Translate: Change translation source"
+5. 选择 "AI Translate" 作为翻译源
 
-## Extension Settings
+## ⚙️ 配置
 
-This extension contributes the following settings:
+在 VS Code 设置中配置以下选项：
 
-* `deeplTranslate.apiFree`: Whether it is a free API
-* `deeplTranslate.authKey`: set to `authKey` to request
-* `deeplTranslate.preserveFormatting`: Sets whether the translation engine should respect the original formatting, even if it would usually correct some aspects. [More](https://www.deepl.com/zh/docs-api/translating-text/request/
-* `deeplTranslate.formality`: Sets whether the translated text should lean towards formal or informal language. [More](https://www.deepl.com/zh/docs-api/translating-text/request/)
+| 配置项                              | 说明                         | 默认值 |
+| ----------------------------------- | ---------------------------- | ------ |
+| `aiTranslate.largeModelApi`       | 大模型 API 端点              | -      |
+| `aiTranslate.largeModelKey`       | API 密钥                     | -      |
+| `aiTranslate.largeModelName`      | 模型名称                     | -      |
+| `aiTranslate.largeModelMaxTokens` | 最大 token 数（0表示不限制） | 2048   |
 
-## Known Issues
+## 🚀 快速开始
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+1. 配置 API 相关信息
+   ![配置](./image/setting.png)
+2. 配置完成后，请调用“Comment Translate”中的“Comment Translate”命令
+   ![换源](./image/change.png)
+3. 选择翻译源为"AI translate"
+   ![选择](./image/select.png)
 
-## Release Notes
+## 🤝 贡献
 
-Users appreciate release notes as you update your extension.
+欢迎提交 Issue 和 Pull Request！
+
+## 📝 更新日志
 
 ### 0.0.1
 
-Initialize the project, the basic capabilities are implemented
+- 🎉 初始化项目
+- ✨ 实现基本翻译功能
+- 🔧 添加配置选项
+
+## 🙏 致谢
+
+本项目基于以下优秀的开源项目开发：
+
+- [vscode-comment-translate](https://github.com/intellism/vscode-comment-translate) - VSCode 注释翻译插件
+- [deepl-translate](https://github.com/intellism/deepl-translate) - DeepL 翻译扩展，本项目的基础代码来源
+
+特别感谢：
+
+- [@intellism](https://github.com/intellism) 提供的优秀插件框架和参考实现
+
+## 📄 许可证说明
+
+本项目采用 [MIT License](LICENSE) 许可证。
+
+部分代码修改自 [deepl-translate](https://github.com/intellism/deepl-translate)，遵循其 MIT 许可证。
