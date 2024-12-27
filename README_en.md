@@ -51,6 +51,9 @@ Issues and Pull Requests are welcome!
 - ✨ Implement basic translation
 - 🔧 Add configuration options
 
+### 0.0.2
+- 🔧 Modify setting name
+
 ## 🙏 Acknowledgments
 
 This project is developed based on the following excellent open-source projects:

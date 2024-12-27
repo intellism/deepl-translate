@@ -10,6 +10,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Changed
 
+- 修改设置名称
+
+## [0.0.2] - 2024-12-28
+
+### Changed
+
 - 初始化项目
 - 实现基本翻译功能
 - 添加配置选项

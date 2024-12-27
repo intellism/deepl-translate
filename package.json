@@ -2,7 +2,7 @@
   "name": "ai-powered-comment-translate-extension",
   "displayName": "Comment Translate for AI",
   "description": "This is an extension for the Comment Translate plugin, enabling it to utilize OpenAI's API for translation through large model calls.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "Cheng-MaoMao",
   "engines": {
     "vscode": "^1.85.0"
@@ -36,7 +36,7 @@
   ],
   "contributes": {
     "configuration": {
-      "title": "AI Translate",
+      "title": "AI Translate Configuration",
       "properties": {
         "aiTranslate.largeModelApi": {
           "type": "string",
