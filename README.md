@@ -2,7 +2,7 @@
 
 基于大语言模型的 VSCode 代码注释翻译插件，作为 [Comment Translate](https://github.com/intellism/vscode-comment-translate) 的翻译源扩展。
 
-[简体中文](README.md)
+[**简体中文**](README.md)|[English](README_en.md)
 
 ## ✨ 特性
 
