@@ -8,7 +8,7 @@ export function activate(context: vscode.ExtensionContext) {
     //公开插件
     return {
         extendTranslate: function (registry: ITranslateRegistry) {
-            registry('comment-translate-ai', AiTranslate);
+            registry('ai-comment-translate', AiTranslate);
         }
     };
 }

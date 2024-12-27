@@ -21,7 +21,7 @@ interface TranslateOption {
 // AiTranslate 类实现了 ITranslate 接口
 export class AiTranslate implements ITranslate {
     // 添加翻译源 ID 属性
-    readonly id = 'comment-translate-ai';
+    readonly id = 'ai-comment-translate';
 
     // 添加翻译源名称属性
     readonly name = 'AI translate';

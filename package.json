@@ -1,6 +1,6 @@
 {
-  "name": "comment-translate-ai",
-  "displayName": "comment-translate-ai",
+  "name": "ai-comment-translate",
+  "displayName": "ai-comment-translate",
   "description": "This is an extension for the Comment Translate plugin, enabling it to utilize OpenAI's API for translation through large model calls.",
   "version": "0.0.1",
   "publisher": "Cheng-MaoMao",
@@ -15,7 +15,7 @@
     "comment translate",
     "ai",
     "AI translate",
-    "comment-translate-ai",
+    "ai-comment-translate",
     "翻译",
     "注释",
     "翻訳"
@@ -63,7 +63,7 @@
     },
     "translates": [
       {
-        "translate": "comment-translate-ai",
+        "translate": "ai-comment-translate",
         "title": "AI translate"
       }
     ]
