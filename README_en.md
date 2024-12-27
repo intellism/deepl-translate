@@ -32,9 +32,9 @@ Configure the following options in VS Code settings:
 
 ## 🚀 Quick Start
 
-1. Configure API-related information
+1. Configure API-related information, ensuring it is in a format compatible with OpenAI's API standards
    ![配置](./image/setting.png)
-2. Once configuration is complete, please execute the "Comment Translate" command from the "Comment Translate" section
+2. Once configuration is complete, please execute the "Comment Translate" command from the "Comment Translate:Change translate source" section
    ![换源](./image/change.png)
 3. Select "AI translate" as the translation source
    ![选择](./image/select.png)
@@ -52,6 +52,7 @@ Issues and Pull Requests are welcome!
 - 🔧 Add configuration options
 
 ### 0.0.2
+
 - 🔧 Modify setting name
 
 ## 🙏 Acknowledgments

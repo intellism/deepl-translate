@@ -16,6 +16,7 @@ interface TranslateOption {
     largeModelKey?: string; // 大模型 KEY
     largeModelName?: string; // 大模型名称
     largeModelMaxTokens?: number; // 大模型最大 token 数
+    largeModelTemperature?: number; // 大模型温度参数
 }
 
 // AiTranslate 类实现了 ITranslate 接口
@@ -49,7 +50,8 @@ export class AiTranslate implements ITranslate {
             largeModelApi: getConfig<string>('largeModelApi'), // 获取大模型 API 的配置
             largeModelKey: getConfig<string>('largeModelKey'), // 获取大模型 KEY 的配置
             largeModelName: getConfig<string>('largeModelName'), // 获取大模型名称的配置
-            largeModelMaxTokens: getConfig<number>('largeModelMaxTokens') // 获取大模型最大 token 数的配置
+            largeModelMaxTokens: getConfig<number>('largeModelMaxTokens'), // 获取大模型最大 token 数的配置
+            largeModelTemperature: getConfig<number>('largeModelTemperature') // 获取大模型温度参数的配置
         };
         return defaultOption;
     }
@@ -75,7 +77,7 @@ export class AiTranslate implements ITranslate {
                         content: `请担任翻译官，请检查语句或单词是否准确，请翻译得自然、流畅和地道，使用专业的计算机术语对注释或函数进行准确的翻译，不需要进行其它多余的添加。将下面的文字翻译成 ${targetLang}:\n${content}`
                     }
                 ],
-                temperature: 0.2,
+                temperature: this._defaultOption.largeModelTemperature || 0.2,
                 stream: false
             };
 

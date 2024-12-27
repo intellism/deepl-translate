@@ -1,7 +1,7 @@
 {
   "name": "ai-powered-comment-translate-extension",
   "displayName": "Comment Translate for AI",
-  "description": "This is an extension for the Comment Translate plugin, enabling it to utilize OpenAI's API for translation through large model calls.",
+  "description": "This is an extension of the Comment Translate plugin, enabling it to perform translations by invoking a large model compatible with the OpenAI API.",
   "version": "0.0.2",
   "publisher": "Cheng-MaoMao",
   "engines": {
@@ -58,6 +58,13 @@
           "default": 2048,
           "minimum": 0,
           "markdownDescription": "大模型最大 token 数量 (设置为 0 则不限制)"
+        },
+        "aiTranslate.largeModelTemperature": {
+          "type": "number",
+          "default": 0.2,
+          "minimum": 0,
+          "maximum": 2,
+          "markdownDescription": "大模型温度参数 (较低的值产生更确定的结果，较高的值产生更多样的结果)"
         }
       }
     },

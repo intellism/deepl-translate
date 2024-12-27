@@ -32,9 +32,9 @@
 
 ## 🚀 快速开始
 
-1. 配置 API 相关信息
+1. 配置 API 相关信息，请使用于OpenAI 兼容的 API 格式
    ![配置](./image/setting.png)
-2. 配置完成后，请调用“Comment Translate”中的“Comment Translate”命令
+2. 配置完成后，请调用“Comment Translate”中的“Comment Translate:Change translate source”命令
    ![换源](./image/change.png)
 3. 选择翻译源为"AI translate"
    ![选择](./image/select.png)
@@ -52,6 +52,7 @@
 - 🔧 添加配置选项
 
 ### 0.0.2
+
 - 🔧 修改设置名称
 
 ## 🙏 致谢
