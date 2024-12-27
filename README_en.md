@@ -14,7 +14,7 @@ A VSCode extension for code comment translation based on Large Language Models, 
 ## 📦 Installation
 
 1. Install [Comment Translate](https://github.com/intellism/vscode-comment-translate)
-2. Install this extension
+2. Install this extension[Comment Translate for AI](https://marketplace.visualstudio.com/items?itemName=Cheng-MaoMao.ai-powered-comment-translate-extension&ssr=false#overview)
 3. Open the command palette in VS Code (Ctrl+Shift+P)
 4. Type "Comment Translate: Change translation source"
 5. Select "AI Translate" as the translation source

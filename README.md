@@ -14,7 +14,7 @@
 ## 📦 安装
 
 1. 安装 [Comment Translate](https://github.com/intellism/vscode-comment-translate)
-2. 安装本插件
+2. 安装本插件[Comment Translate for AI](https://marketplace.visualstudio.com/items?itemName=Cheng-MaoMao.ai-powered-comment-translate-extension&ssr=false#overview)
 3. 在 VS Code 中打开命令面板 (Ctrl+Shift+P)
 4. 输入 "Comment Translate: Change translation source"
 5. 选择 "AI Translate" 作为翻译源
