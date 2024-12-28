@@ -98,7 +98,7 @@
   },
   "dependencies": {
     "axios": "^1.x.x",
-    "comment-translate-manager": "^0.0.2",
+    "comment-translate-manager": "^0.0.5",
     "querystring": "^0.2.1"
   }
 }
