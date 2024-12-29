@@ -172,9 +172,9 @@ export class AiTranslate implements ITranslate {
         let customContent: string;// 自定义发送的内容
 
         if (this._defaultOption.namingRules == "default") {
-            customContent = `请根据${languageId}判断"${paragraph}"中的"${variableName}"是类名、方法名、函数名还是其他。然后根据${languageId}标准规范的命名规则，使用专业的语言将"${variableName}"翻译成英语，直接返回"${variableName}"翻译后的结果，不需要任何解释。`;
+            customContent = `请根据${languageId}判断"${paragraph}"中的"${variableName}"是类名、方法名、函数名还是其他。然后根据${languageId}标准规范的命名规则，使用专业的语言将"${variableName}"翻译成英语，直接返回"${variableName}"翻译后的结果，不需要任何解释，不使用特殊符号。`;
         } else {
-            customContent = `请根据${languageId}判断"${paragraph}"中的"${variableName}"是类名、方法名、函数名还是其他。然后根据${languageId}的标准规范和"${this._defaultOption.namingRules}"命名规则，使用专业的语言将"${variableName}"翻译成英语，直接返回"${variableName}"翻译后的结果，不需要任何解释。`;
+            customContent = `请根据${languageId}判断"${paragraph}"中的"${variableName}"是类名、方法名、函数名还是其他。然后根据${languageId}的标准规范和"${this._defaultOption.namingRules}"命名规则，使用专业的语言将"${variableName}"翻译成英语，直接返回"${variableName}"翻译后的结果，不需要任何解释，不使用特殊符号。`;
         }
 
         try {

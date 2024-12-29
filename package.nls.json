@@ -1,0 +1,15 @@
+{
+    "config.title": "AI Translate Configuration",
+    "config.largeModelApi.desc": "Large Model API Endpoint",
+    "config.largeModelKey.desc": "Large Model API Key",
+    "config.largeModelName.desc": "Large Model Name",
+    "config.largeModelMaxTokens.desc": "Maximum tokens (0 for unlimited)",
+    "config.largeModelTemperature.desc": "Model temperature (lower values for more focused results)",
+    "config.namingRules.desc": "Naming convention rules",
+    "config.namingRules.default": "Example: AI auto-detect based on language",
+    "config.namingRules.camelCase": "Example: Camel Case naming",
+    "config.namingRules.kr": "Example: K&R style naming",
+    "config.namingRules.snakeCase": "Example: Snake Case naming",
+    "config.namingRules.hungarian": "Example: Hungarian notation",
+    "config.aiTranslate.aiNaming": "AI Naming"
+}

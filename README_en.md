@@ -7,7 +7,7 @@ A VSCode code comment translation plugin that supports large model invocation, s
 ## ✨ Features
 
 - 🤖 Adopts OpenAI API standards
-- 🎯 Intelligent naming of parameters such as functions, classes, and variables
+- 🎯 Intelligent naming of parameters such as functions, classes, and variables, optimizing names according to naming conventions
 - ⚡ Fast translation response
 - 🛠️ Flexible configuration options
 
@@ -40,6 +40,7 @@ Configure the following options in VS Code settings:
    ![换源](./image/change.png)
 3. Select "AI translate" as the translation source
    ![选择](./image/select.png)
+4. **How to use "AI Naming":**Right-click the mouse→Select "Comment Translation" from the list→Click "AI Naming" to use it
 
 ## 🤝 Contributing
 
@@ -62,7 +63,9 @@ Issues and Pull Requests are welcome!
 - 🔧 Add Model Temperature setting
 
 ### 0.0.4
+
 - 🤖 Add an AI naming feature that allows the AI to intelligently assign names to parameters such as variables, functions, and classes based on your settings or its own judgment
+- 🌐 Added configuration files for multilingual environments
 
 ## 🙏 Acknowledgments
 

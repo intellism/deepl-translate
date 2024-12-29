@@ -10,6 +10,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Changed
 
+- 添加AI命名功能，AI可以根据你的设定或者自行判断，对变量、函数、类等参数智能命名
+- 添加了多语言环境的配置文件
+
+## [0.0.4] - 2024-12-29
+
+### Changed
+
 - 添加Model Temperature设置
 
 ## [0.0.3] - 2024-12-28

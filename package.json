@@ -36,35 +36,35 @@
   ],
   "contributes": {
     "configuration": {
-      "title": "AI Translate Configuration",
+      "title": "%config.title%",
       "properties": {
         "aiTranslate.largeModelApi": {
           "type": "string",
           "default": "",
-          "markdownDescription": "大模型 API 地址"
+          "markdownDescription": "%config.largeModelApi.desc%"
         },
         "aiTranslate.largeModelKey": {
           "type": "string",
           "default": "",
-          "markdownDescription": "大模型 API Key"
+          "markdownDescription": "%config.largeModelKey.desc%"
         },
         "aiTranslate.largeModelName": {
           "type": "string",
           "default": "",
-          "markdownDescription": "大模型名称"
+          "markdownDescription": "%config.largeModelName.desc%"
         },
         "aiTranslate.largeModelMaxTokens": {
           "type": "number",
           "default": 2048,
           "minimum": 0,
-          "markdownDescription": "大模型最大 token 数量 (设置为 0 则不限制)"
+          "markdownDescription": "%config.largeModelMaxTokens.desc%"
         },
         "aiTranslate.largeModelTemperature": {
           "type": "number",
           "default": 0.2,
           "minimum": 0,
           "maximum": 2,
-          "markdownDescription": "大模型温度参数 (较低的值产生更确定的结果，较高的值产生更多样的结果)"
+          "markdownDescription": "%config.largeModelTemperature.desc%"
         },
         "aiTranslate.namingRules": {
           "type": "string",
@@ -75,15 +75,15 @@
             "Snake Case",
             "Hungarian Notation"
           ],
-          "default": "default",
           "enumDescriptions": [
-            "Example: 由AI根据语言模式自动判断",
-            "Example: 驼峰命名法",
-            "Example: K&R风格命名",
-            "Example: 下划线命名法",
-            "Example: 匈牙利命名法"
+            "%config.namingRules.default%",
+            "%config.namingRules.camelCase%",
+            "%config.namingRules.kr%",
+            "%config.namingRules.snakeCase%",
+            "%config.namingRules.hungarian%"
           ],
-          "markdownDescription": "命名规则"
+          "default": "default",
+          "markdownDescription": "%config.namingRules.desc%"
         }
       }
     },
@@ -96,7 +96,7 @@
     "commands": [
       {
         "command": "aiTranslate.aiNaming",
-        "title": "AI命名"
+        "title": "%config.aiTranslate.aiNaming%"
       }
     ],
     "menus": {
