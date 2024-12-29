@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'; // 导入 VS Code 扩展开发 API
 import { AiTranslate } from './AiTranslate'; // 导入 AI 翻译类
+import { log } from 'console';
 
 /**
  * 扩展激活入口
@@ -20,9 +21,14 @@ export function activate(context: vscode.ExtensionContext) {
         const someSetting = otherPluginConfig.get('source');//获取插件配置中的某个配置项
 
         // 判断翻译源是否为 AI 翻译
-        if (someSetting !== 'ai-powered-comment-translate-extension' && someSetting !== 'AI translate') {
-            vscode.window.showInformationMessage('请将翻译源选择为AI translate');
-            return;
+        switch (someSetting) {
+            case 'Cheng-MaoMao.ai-powered-comment-translate-extension-ai-powered-comment-translate-extension':
+                break;
+            case 'AI translate':
+                break;
+            default:
+                vscode.window.showInformationMessage('请将翻译源选择为AI translate');
+                return;
         }
 
         if (!editor) return;

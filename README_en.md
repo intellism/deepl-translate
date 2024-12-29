@@ -1,13 +1,13 @@
 # Comment Translate AI
 
-A VSCode extension for code comment translation based on Large Language Models, serving as a translation source extension for [Comment Translate](https://github.com/intellism/vscode-comment-translate).
+A VSCode code comment translation plugin that supports large model invocation, serving as a translation source extension for [Comment Translate](https://github.com/intellism/vscode-comment-translate)
 
 [简体中文](README.md)|[**English**](README_en.md)
 
 ## ✨ Features
 
 - 🤖 Adopts OpenAI API standards
-- 🎯 Professional programming terminology translation
+- 🎯 Intelligent naming of parameters such as functions, classes, and variables
 - ⚡ Fast translation response
 - 🛠️ Flexible configuration options
 
@@ -23,12 +23,14 @@ A VSCode extension for code comment translation based on Large Language Models, 
 
 Configure the following options in VS Code settings:
 
-| Option                              | Description                        | Default |
-| ----------------------------------- | ---------------------------------- | ------- |
-| `aiTranslate.largeModelApi`       | Large model API endpoint           | -       |
-| `aiTranslate.largeModelKey`       | API key                            | -       |
-| `aiTranslate.largeModelName`      | Model name                         | -       |
-| `aiTranslate.largeModelMaxTokens` | Maximum tokens (0 means unlimited) | 2048    |
+|                Option                |                                                                   Description                                                                   |               Default               |
+| :-----------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------: |
+|     `aiTranslate.largeModelApi`     |                                                             Large model API endpoint                                                             |                  -                  |
+|     `aiTranslate.largeModelKey`     |                                                                     API key                                                                     |                  -                  |
+|    `aiTranslate.largeModelName`    |                                                                    Model name                                                                    |                  -                  |
+|  `aiTranslate.largeModelMaxTokens`  |                                                        Maximum tokens (0 means unlimited)                                                        |                 2048                 |
+| `aiTranslate.largeModelTemperature` | The temperature parameter of a large model<br />(a lower value produces more certain results, while a higher value yields more diverse outcomes) |                 0.2                 |
+|      `aiTranslate.namingRules`      |                                                                Naming Conventions                                                                | Translation: Determined by AI itself |
 
 ## 🚀 Quick Start
 
@@ -58,6 +60,9 @@ Issues and Pull Requests are welcome!
 ### 0.0.3
 
 - 🔧 Add Model Temperature setting
+
+### 0.0.4
+- 🤖 Add an AI naming feature that allows the AI to intelligently assign names to parameters such as variables, functions, and classes based on your settings or its own judgment
 
 ## 🙏 Acknowledgments
 
