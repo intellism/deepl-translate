@@ -40,7 +40,7 @@ Configure the following options in VS Code settings:
    ![换源](./image/change.png)
 3. Select "AI translate" as the translation source
    ![选择](./image/select.png)
-4. **How to use "AI Naming":**Right-click the mouse→Select "Comment Translation" from the list→Click "AI Naming" to use it
+4. **How to use "AI Naming":** Right-click the mouse→Select "Comment Translation" from the list→Click "AI Naming" to use it
 
 ## 🤝 Contributing
 
