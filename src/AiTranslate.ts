@@ -1,5 +1,6 @@
 import axios from 'axios'; // 导入 axios 库，用于发送 HTTP 请求
-import { workspace } from 'vscode'; // 从 VS Code 导入 workspace 模块
+import * as vscode from 'vscode'; // 从 VS Code 导入所有模块
+import { workspace, window } from 'vscode'; // 从 VS Code 导入 workspace 和 window 模块
 import { ITranslate, ITranslateOptions } from 'comment-translate-manager'; // 导入接口 ITranslate 和 ITranslateOptions
 
 const PREFIXCONFIG = 'aiTranslate'; // 配置前缀，用于获取翻译相关的配置
@@ -17,6 +18,7 @@ interface TranslateOption {
     largeModelName?: string; // 大模型名称
     largeModelMaxTokens?: number; // 大模型最大 token 数
     largeModelTemperature?: number; // 大模型温度参数
+    namingRules?: string; // 命名规则
 }
 
 // AiTranslate 类实现了 ITranslate 接口
@@ -51,24 +53,37 @@ export class AiTranslate implements ITranslate {
             largeModelKey: getConfig<string>('largeModelKey'), // 获取大模型 KEY 的配置
             largeModelName: getConfig<string>('largeModelName'), // 获取大模型名称的配置
             largeModelMaxTokens: getConfig<number>('largeModelMaxTokens'), // 获取大模型最大 token 数的配置
-            largeModelTemperature: getConfig<number>('largeModelTemperature') // 获取大模型温度参数的配置
+            largeModelTemperature: getConfig<number>('largeModelTemperature'), // 获取大模型温度参数的配置
+            namingRules: getConfig<string>('namingRules') // 获取命名规则的配置
         };
         return defaultOption;
     }
 
     // 使用大模型 API 执行翻译
     async translate(content: string, { to = 'auto' }: ITranslateOptions) {
+        console.log('开始翻译文本:', {
+            contentLength: content.length,
+            targetLang: to,
+            modelName: this._defaultOption.largeModelName
+        });
+
         const url = this._defaultOption.largeModelApi;
 
-        if (!url || !this._defaultOption.largeModelKey || !this._defaultOption.largeModelName) {
-            throw new Error('请检查 largeModelApi、largeModelKey、largeModelName 配置是否正确');
+        if (!url || !this._defaultOption.largeModelKey) {
+            console.error('配置错误: API信息不完整');
+            throw new Error('请检查 largeModelApi 和 largeModelKey 配置');
         }
 
         try {
             const targetLang = to === 'auto' ? 'zh-CN' : to;
             const maxTokens = this._defaultOption.largeModelMaxTokens === 0 ? undefined : (this._defaultOption.largeModelMaxTokens || 2048);
 
-            // 按照标准格式构建请求数据
+            console.log('翻译配置:', {
+                targetLang,
+                maxTokens,
+                temperature: this._defaultOption.largeModelTemperature
+            });
+
             const data = {
                 model: this._defaultOption.largeModelName,
                 messages: [
@@ -85,6 +100,12 @@ export class AiTranslate implements ITranslate {
                 data['max_tokens'] = maxTokens;
             }
 
+            console.log('发送翻译请求:', {
+                url,
+                model: data.model,
+                contentPreview: content.substring(0, 100) + (content.length > 100 ? '...' : '')
+            });
+
             const res = await axios.post(url, data, {
                 headers: {
                     'Authorization': `Bearer ${this._defaultOption.largeModelKey}`,
@@ -93,26 +114,121 @@ export class AiTranslate implements ITranslate {
                 timeout: 30000
             });
 
+            console.log('收到翻译响应:', {
+                status: res.status,
+                hasChoices: !!res.data?.choices?.length
+            });
+
             if (!res.data?.choices?.[0]?.message?.content) {
-                console.error('API详细返回数据:', JSON.stringify(res.data, null, 2));
+                console.error('API响应格式错误:', JSON.stringify(res.data, null, 2));
                 throw new Error('API响应格式不符合标准');
             }
 
-            return res.data.choices[0].message.content.trim();
+            const result = res.data.choices[0].message.content.trim();
+            console.log('翻译完成:', {
+                resultLength: result.length,
+                preview: result.substring(0, 100) + (result.length > 100 ? '...' : '')
+            });
+
+            return result;
         } catch (error: any) {
-            console.error("翻译错误详细信息:", {
+            console.error('翻译失败:', {
                 error: error.message,
                 response: error.response?.data,
-                status: error.response?.status,
-                headers: error.response?.headers,
-                config: {
-                    url: error.config?.url,
-                    method: error.config?.method,
-                    headers: error.config?.headers,
-                    data: error.config?.data
-                }
+                status: error.response?.status
             });
             throw new Error(`翻译失败: ${error.response?.data?.error?.message || error.message}`);
+        }
+    }
+
+    // AI命名
+    async aiNaming(variableName: string, languageId: string): Promise<string> {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            throw new Error('未找到活动编辑器');
+        }
+        // 获取选中文本的范围
+        const selection = editor.selection;
+        const document = editor.document;
+        const startLine = selection.start.line;
+
+        // 获取完整段落文本
+        const paragraph = await this.getVariableParagraph(editor.document, selection.start.line);
+        console.log('变量所在段落:', paragraph);
+
+        // 原有的翻译逻辑
+        console.log('开始AI命名:', {
+            variableName,
+            languageId,
+            modelName: this._defaultOption.largeModelName
+        });
+
+        const url = this._defaultOption.largeModelApi;
+
+        if (!url || !this._defaultOption.largeModelKey) {
+            throw new Error('请配置 API 相关信息');
+        }
+
+        let customContent: string;// 自定义发送的内容
+
+        if (this._defaultOption.namingRules == "default") {
+            customContent = `请根据${languageId}判断"${paragraph}"中的"${variableName}"是类名、方法名、函数名还是其他。然后根据${languageId}标准规范的命名规则，使用专业的语言将"${variableName}"翻译成英语，直接返回"${variableName}"翻译后的结果，不需要任何解释。`;
+        } else {
+            customContent = `请根据${languageId}判断"${paragraph}"中的"${variableName}"是类名、方法名、函数名还是其他。然后根据${languageId}的标准规范和"${this._defaultOption.namingRules}"命名规则，使用专业的语言将"${variableName}"翻译成英语，直接返回"${variableName}"翻译后的结果，不需要任何解释。`;
+        }
+
+        try {
+            const maxTokens = this._defaultOption.largeModelMaxTokens === 0 ? undefined : (this._defaultOption.largeModelMaxTokens || 2048);
+
+            const data = {
+                model: this._defaultOption.largeModelName,
+                messages: [
+                    {
+                        role: "user",
+                        content: customContent
+                    }
+                ],
+                temperature: this._defaultOption.largeModelTemperature || 0.2,
+                stream: false
+            };
+
+            if (maxTokens) {
+                data['max_tokens'] = maxTokens;
+            }
+
+            console.log('发送翻译请求:', {
+                url,
+                data
+            });
+
+            const res = await axios.post(url, data, {
+                headers: {
+                    'Authorization': `Bearer ${this._defaultOption.largeModelKey}`,
+                    'Content-Type': 'application/json'
+                },
+                timeout: 30000
+            });
+
+            console.log('收到翻译响应:', {
+                status: res.status,
+                data: res.data
+            });
+
+            if (!res.data?.choices?.[0]?.message?.content) {
+                console.error('API响应格式不符合标准:', res.data);
+                throw new Error('API响应格式不符合标准');
+            }
+
+            const result = res.data.choices[0].message.content.trim();
+            console.log('翻译结果:', result);
+            return result;
+        } catch (error: any) {
+            console.error('翻译变量名失败:', {
+                error: error.message,
+                response: error.response?.data,
+                status: error.response?.status
+            });
+            throw new Error(`变量名翻译失败: ${error.message}`);
         }
     }
 
@@ -124,5 +240,14 @@ export class AiTranslate implements ITranslate {
     // 支持所有语言
     isSupported(src: string): boolean {
         return true;
+    }
+
+    async getVariableParagraph(document: vscode.TextDocument, lineNumber: number): Promise<string> {
+        // 获取当前行的缩进级别
+        const currentLine = document.lineAt(lineNumber);
+        const currentIndent = currentLine.firstNonWhitespaceCharacterIndex;
+
+        // 只返回当前行
+        return currentLine.text.trim();
     }
 }

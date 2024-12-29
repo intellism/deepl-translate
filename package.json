@@ -65,6 +65,25 @@
           "minimum": 0,
           "maximum": 2,
           "markdownDescription": "大模型温度参数 (较低的值产生更确定的结果，较高的值产生更多样的结果)"
+        },
+        "aiTranslate.namingRules": {
+          "type": "string",
+          "enum": [
+            "default",
+            "Camel Case",
+            "Kernighan and Ritchie",
+            "Snake Case",
+            "Hungarian Notation"
+          ],
+          "default": "default",
+          "enumDescriptions": [
+            "Example: 由AI根据语言模式自动判断",
+            "Example: 驼峰命名法",
+            "Example: K&R风格命名",
+            "Example: 下划线命名法",
+            "Example: 匈牙利命名法"
+          ],
+          "markdownDescription": "命名规则"
         }
       }
     },
@@ -73,7 +92,20 @@
         "translate": "ai-powered-comment-translate-extension",
         "title": "AI translate"
       }
-    ]
+    ],
+    "commands": [
+      {
+        "command": "aiTranslate.aiNaming",
+        "title": "AI命名"
+      }
+    ],
+    "menus": {
+      "commentTranslate": [
+        {
+          "command": "aiTranslate.aiNaming"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
