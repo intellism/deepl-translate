@@ -11,5 +11,6 @@
     "config.namingRules.kr": "Example: K&R style naming",
     "config.namingRules.snakeCase": "Example: Snake Case naming",
     "config.namingRules.hungarian": "Example: Hungarian notation",
-    "config.aiTranslate.aiNaming": "AI Naming"
+    "config.aiTranslate.aiNaming": "AI Naming",
+    "config.debugMode.desc": "Debug mode"
 }

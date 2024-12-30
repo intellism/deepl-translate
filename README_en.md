@@ -34,13 +34,20 @@ Configure the following options in VS Code settings:
 
 ## 🚀 Quick Start
 
-1. Configure API-related information, ensuring it is in a format compatible with OpenAI's API standards
+1. Please configure the API-related information and ensure that the large model service provider you are using is compatible with OpenAI's API call format
+[OpenAI Official Documentation](https://platform.openai.com/docs/api-reference/chat)
    ![配置](./image/setting.png)
 2. Once configuration is complete, please execute the "Comment Translate" command from the "Comment Translate:Change translate source" section
    ![换源](./image/change.png)
 3. Select "AI translate" as the translation source
    ![选择](./image/select.png)
-4. **How to use "AI Naming":** Right-click the mouse→Select "Comment Translation" from the list→Click "AI Naming" to use it
+
+### How to use "AI Naming"
+
+* Right-click the mouse→Select "Comment Translation" from the list→Click "AI Naming" to use it
+* Translate the naming according to the selected naming format into English
+* Optimize naming according to the naming convention
+   ![AI命名](./image/AI%20Naming.gif)
 
 ## 🤝 Contributing
 
@@ -66,6 +73,10 @@ Issues and Pull Requests are welcome!
 
 - 🤖 Add an AI naming feature that allows the AI to intelligently assign names to parameters such as variables, functions, and classes based on your settings or its own judgment
 - 🌐 Added configuration files for multilingual environments
+
+### 0.0.5
+
+- 🔍 "Debug feature" has been added in the plugin settings
 
 ## 🙏 Acknowledgments
 

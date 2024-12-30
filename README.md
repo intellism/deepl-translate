@@ -34,13 +34,20 @@
 
 ## 🚀 快速开始
 
-1. 配置 API 相关信息，请使用于OpenAI 兼容的 API 格式
+1. 配置 API 相关信息，请确保您使用的大模型服务商兼容OpenAI的API调用格式
+   [Open AI官方文档](https://platform.openai.com/docs/api-reference/chat)
    ![配置](./image/setting.png)
 2. 配置完成后，请调用“Comment Translate”中的“Comment Translate:Change translate source”命令
    ![换源](./image/change.png)
 3. 选择翻译源为"AI translate"
    ![选择](./image/select.png)
-4. **怎么使用"AI命名":** 右键鼠标→在列表中选择"注释翻译"→点击"AI命名"即可使用
+
+### 怎么使用"AI命名"
+
+* 右键鼠标→在列表中选择"注释翻译"→点击"AI命名"即可使用
+* 将命名按照所选的命名格式翻译成英文
+* 按照命名格式优化命名
+  ![AI命名](./image/AI%20Naming.gif)
 
 ## 🤝 贡献
 
@@ -66,6 +73,10 @@
 
 - 🤖 添加AI命名功能，AI可以根据你的设定或者自行判断，对变量、函数、类等参数智能命名
 - 🌐 添加了多语言环境的配置文件
+
+### 0.0.5
+
+- 🔍 在插件设置里面添加了"调试功能"
 
 ## 🙏 致谢
 

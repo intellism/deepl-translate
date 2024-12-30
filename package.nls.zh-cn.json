@@ -11,5 +11,6 @@
     "config.namingRules.kr": "示例: K&R风格命名",
     "config.namingRules.snakeCase": "示例: 下划线命名法",
     "config.namingRules.hungarian": "示例: 匈牙利命名法",
-    "config.aiTranslate.aiNaming": "AI命名"
+    "config.aiTranslate.aiNaming": "AI命名",
+    "config.debugMode.desc": "调试模式"
 }
