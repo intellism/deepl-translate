@@ -1,6 +1,6 @@
 # Comment Translate AI
 
-支持大模型调用的 VSCode 代码注释翻译插件，作为 [Comment Translate](https://github.com/intellism/vscode-comment-translate) 的翻译源扩展
+支持大模型调用的 VSCode 代码注释翻译插件，作为 [Comment Translate](https://marketplace.visualstudio.com/items?itemName=intellsmi.comment-translate) 的翻译源扩展
 
 [**简体中文**](README.md)|[English](README_en.md)
 
@@ -13,7 +13,7 @@
 
 ## 📦 安装
 
-1. 安装 [Comment Translate](https://github.com/intellism/vscode-comment-translate)
+1. 安装 [Comment Translate](https://marketplace.visualstudio.com/items?itemName=intellsmi.comment-translate)
 2. 安装本插件[Comment Translate for AI](https://marketplace.visualstudio.com/items?itemName=Cheng-MaoMao.ai-powered-comment-translate-extension&ssr=false#overview)
 3. 在 VS Code 中打开命令面板 (Ctrl+Shift+P)
 4. 输入 "Comment Translate: Change translation source"

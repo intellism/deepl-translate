@@ -1,6 +1,6 @@
 # Comment Translate AI
 
-A VSCode code comment translation plugin that supports large model invocation, serving as a translation source extension for [Comment Translate](https://github.com/intellism/vscode-comment-translate)
+A VSCode code comment translation plugin that supports large model invocation, serving as a translation source extension for [Comment Translate](https://marketplace.visualstudio.com/items?itemName=intellsmi.comment-translate)
 
 [简体中文](README.md)|[**English**](README_en.md)
 
@@ -13,7 +13,7 @@ A VSCode code comment translation plugin that supports large model invocation, s
 
 ## 📦 Installation
 
-1. Install [Comment Translate](https://github.com/intellism/vscode-comment-translate)
+1. Install [Comment Translate](https://marketplace.visualstudio.com/items?itemName=intellsmi.comment-translate)
 2. Install this extension[Comment Translate for AI](https://marketplace.visualstudio.com/items?itemName=Cheng-MaoMao.ai-powered-comment-translate-extension&ssr=false#overview)
 3. Open the command palette in VS Code (Ctrl+Shift+P)
 4. Type "Comment Translate: Change translation source"
