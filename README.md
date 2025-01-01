@@ -39,7 +39,7 @@
 1. 配置 API 相关信息，请确保您使用的大模型服务商兼容OpenAI的API调用格式
    [Open AI官方文档](https://platform.openai.com/docs/api-reference/chat)
    *中国大陆地区推荐使用[DeepSeek](https://platform.deepseek.com/)
-   不是广告，因为这个模型效果好token便宜推荐一下*
+   不是广告，因为这个模型效果好而且token便宜推荐一下*
    ![配置](./image/setting.png)
 2. 配置完成后，请调用“Comment Translate”中的“Comment Translate:Change translate source”命令
    ![换源](./image/change.png)
