@@ -2,6 +2,8 @@
 
 支持大模型调用的 VSCode 代码注释翻译插件，作为 [Comment Translate](https://marketplace.visualstudio.com/items?itemName=intellsmi.comment-translate) 的翻译源扩展
 
+⚠️*本插件不提供大模型API，请自备API，并确保其支持OpenAI的API的调用格式*
+
 [**简体中文**](README.md)|[English](README_en.md)
 
 ## ✨ 特性
@@ -36,6 +38,8 @@
 
 1. 配置 API 相关信息，请确保您使用的大模型服务商兼容OpenAI的API调用格式
    [Open AI官方文档](https://platform.openai.com/docs/api-reference/chat)
+   *中国大陆地区推荐使用[DeepSeek](https://platform.deepseek.com/)
+   不是广告，因为这个模型效果好token便宜推荐一下*
    ![配置](./image/setting.png)
 2. 配置完成后，请调用“Comment Translate”中的“Comment Translate:Change translate source”命令
    ![换源](./image/change.png)
@@ -77,6 +81,10 @@
 ### 0.0.5
 
 - 🔍 在插件设置里面添加了"调试功能"
+
+### 0.0.6
+
+- 🤖 优化了AI提示词
 
 ## 🙏 致谢
 

@@ -2,6 +2,8 @@
 
 A VSCode code comment translation plugin that supports large model invocation, serving as a translation source extension for [Comment Translate](https://marketplace.visualstudio.com/items?itemName=intellsmi.comment-translate)
 
+⚠️*This plugin does not provide a large model API. Please prepare your own API and ensure it supports the calling format of OpenAI's API*
+
 [简体中文](README.md)|[**English**](README_en.md)
 
 ## ✨ Features
@@ -35,7 +37,7 @@ Configure the following options in VS Code settings:
 ## 🚀 Quick Start
 
 1. Please configure the API-related information and ensure that the large model service provider you are using is compatible with OpenAI's API call format
-[OpenAI Official Documentation](https://platform.openai.com/docs/api-reference/chat)
+   [OpenAI Official Documentation](https://platform.openai.com/docs/api-reference/chat)
    ![配置](./image/setting.png)
 2. Once configuration is complete, please execute the "Comment Translate" command from the "Comment Translate:Change translate source" section
    ![换源](./image/change.png)
@@ -47,7 +49,7 @@ Configure the following options in VS Code settings:
 * Right-click the mouse→Select "Comment Translation" from the list→Click "AI Naming" to use it
 * Translate the naming according to the selected naming format into English
 * Optimize naming according to the naming convention
-   ![AI命名](./image/AI%20Naming.gif)
+  ![AI命名](./image/AI%20Naming.gif)
 
 ## 🤝 Contributing
 
@@ -77,6 +79,10 @@ Issues and Pull Requests are welcome!
 ### 0.0.5
 
 - 🔍 "Debug feature" has been added in the plugin settings
+
+### 0.0.6
+
+- 🤖 Optimized AI prompts
 
 ## 🙏 Acknowledgments
 

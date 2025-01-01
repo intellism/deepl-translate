@@ -121,7 +121,7 @@ export class AiTranslate implements ITranslate {
                 messages: [
                     {
                         role: "user",
-                        content: `请担任翻译官，请检查语句或单词是否准确，请翻译得自然、流畅和地道，使用专业的计算机术语对注释或函数进行准确的翻译，不需要进行其它多余的添加。将下面的文字翻译成 ${targetLang}:\n"${content}"`
+                        content: `Please act as a translator, check if the sentences or words are accurate, translate naturally, smoothly, and idiomatically, use professional computer terminology for accurate translation of comments or functions, no additional unnecessary additions are needed. Translate the following text into ${targetLang}:\n${content}`
                     }
                 ],
                 temperature: this._defaultOption.largeModelTemperature || 0.2,
@@ -145,7 +145,7 @@ export class AiTranslate implements ITranslate {
                 messages: [
                     {
                         role: "user",
-                        content: `请担任翻译官，请检查语句或单词是否准确，请翻译得自然、流畅和地道，使用专业的计算机术语对注释或函数进行准确的翻译，不需要进行其它多余的添加。将下面的文字翻译成 ${targetLang}:\n"${content}"`
+                        content: `Please act as a translator, check if the sentences or words are accurate, translate naturally, smoothly, and idiomatically, use professional computer terminology for accurate translation of comments or functions, no additional unnecessary additions are needed. Translate the following text into ${targetLang}:\n${content}`
                     }
                 ],
                 contentPreview: content.substring(0, 100) + (content.length > 100 ? '...' : '')
@@ -259,9 +259,9 @@ export class AiTranslate implements ITranslate {
         let customContent: string;// 自定义发送的内容
 
         if (this._defaultOption.namingRules == "default") {
-            customContent = `请根据${languageId}判断"${paragraph}"中的"${variableName}"是类名、方法名、函数名还是其他。然后根据${languageId}标准规范的命名规则，使用专业的语言将"${variableName}"翻译成英语，直接返回"${variableName}"翻译后的结果，不需要任何解释，不使用特殊符号。`;
+            customContent = `Please determine whether "${variableName}" in "${paragraph}" is a class name, method name, function name, or other based on ${languageId}. Then, according to the standard naming conventions of ${languageId}, translate "${variableName}" into English using professional language, and directly return the translated result of "${variableName}" without any explanation or special symbols.`;
         } else {
-            customContent = `请根据${languageId}判断"${paragraph}"中的"${variableName}"是类名、方法名、函数名还是其他。然后根据${languageId}的标准规范和"${this._defaultOption.namingRules}"命名规则，使用专业的语言将"${variableName}"翻译成英语，直接返回"${variableName}"翻译后的结果，不需要任何解释，不使用特殊符号。`;
+            customContent = `Please determine whether "${variableName}" in "${paragraph}" is a class name, method name, function name, or other based on ${languageId}. Then, according to the standard specifications of ${languageId} and the naming rules "${this._defaultOption.namingRules}", translate "${variableName}" into English using professional language, and directly return the translated result of "${variableName}" without any explanation or special symbols.`;
         }
 
         try {

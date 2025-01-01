@@ -10,6 +10,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Changed
 
+- 🤖 优化了AI提示词
+
+## [0.0.6] - 2025-01-02
+
+### Changed
+
 - 🔍 在插件设置里面添加了"调试功能"
 
 ## [0.0.5] - 2024-12-31
