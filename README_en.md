@@ -10,6 +10,7 @@ A VSCode code comment translation plugin that supports large model invocation, s
 
 - 🤖 Adopts OpenAI API standards
 - 🎯 Intelligent naming of parameters such as functions, classes, and variables, optimizing names according to naming conventions
+- ⌨️ Custom Prompt Words
 - ⚡ Fast translation response
 - 🛠️ Flexible configuration options
 
@@ -51,6 +52,34 @@ Configure the following options in VS Code settings:
 * Optimize naming according to the naming convention
   ![AI命名](./image/AI%20Naming.gif)
 
+### Custom AI prompts
+
+*The prompt must include the following parameters, with the parameter content automatically retrieved by the plugin*
+
+**Custom Naming Prompt**
+
+|             Parameter             |                       Description                       |          |
+| :--------------------------------: | :-----------------------------------------------------: | -------- |
+|          ${variableName}          |       The variable name currently being processed       | Required |
+|            ${paragraph}            |       The paragraph where the variable is located       | Required |
+|           ${languageId}           |       The language identifier of the current file       | Required |
+| ${this._defaultOption.namingRules} | Naming Rules (controlled by Ai Translate: Naming Rules) | Optional |
+
+```
+Example:Please determine whether "${variableName}" in "${paragraph}" is a class name, method name, function name, or other based on ${languageId}. Then, according to the standard specifications of ${languageId} and the naming rules "${this._defaultOption.namingRules}", translate "${variableName}" into English using professional language, and directly return the translated result of "${variableName}" without any explanation or special symbols.
+```
+
+**Custom translation prompt words**
+
+|   Parameter   |             Description             |          |
+| :-----------: | :---------------------------------: | -------- |
+| ${targetLang} | The target language for translation | Required |
+|  ${content}  |      Content to be translated      | Required |
+
+```
+Example:Please act as a translator, check if the sentences or words are accurate, translate naturally, smoothly, and idiomatically, use professional computer terminology for accurate translation of comments or functions, no additional unnecessary additions are needed. Translate the following text into ${targetLang}:\n${content}`
+```
+
 ## 🤝 Contributing
 
 Issues and Pull Requests are welcome!
@@ -83,6 +112,10 @@ Issues and Pull Requests are welcome!
 ### 0.0.6
 
 - 🤖 Optimized AI prompts
+
+### 0.0.7
+
+- ✨ The feature for adding custom AI prompts has been added [#1](https://github.com/Cheng-MaoMao/comment-translate-ai/issues/1)
 
 ## 🙏 Acknowledgments
 

@@ -1,35 +1,37 @@
 import axios from 'axios'; // 导入 axios 库，用于发送 HTTP 请求
-import * as vscode from 'vscode'; // 从 VS Code 导入所有模块
+import * as vscode from 'vscode'; // 导入 VS Code 的所有模块
 import { workspace, window } from 'vscode'; // 从 VS Code 导入 workspace 和 window 模块
-import { ITranslate, ITranslateOptions } from 'comment-translate-manager'; // 导入接口 ITranslate 和 ITranslateOptions
+import { ITranslate, ITranslateOptions } from 'comment-translate-manager'; // 导入 ITranslate 和 ITranslateOptions 接口
 import { log } from 'console';
 
-const PREFIXCONFIG = 'aiTranslate'; // 配置前缀，用于获取翻译相关的配置
-const outputChannel = vscode.window.createOutputChannel('AI Translate'); // 创建输出频道
+const PREFIXCONFIG = 'aiTranslate'; // 配置前缀，用于获取 AI 翻译相关的配置
+const outputChannel = vscode.window.createOutputChannel('AI Translate'); // 创建输出面板，用于显示调试信息
 
-// 获取配置项的值
+// 获取指定配置项的值
 export function getConfig<T>(key: string): T | undefined {
-    let configuration = workspace.getConfiguration(PREFIXCONFIG); // 获取配置对象
-    return configuration.get<T>(key); // 返回指定配置项的值
+    let configuration = workspace.getConfiguration(PREFIXCONFIG); // 获取 AI 翻译的配置对象
+    return configuration.get<T>(key); // 返回指定的配置项的值
 }
 
 // 定义翻译选项的接口
 interface TranslateOption {
-    largeModelApi?: string; // 大模型 API
-    largeModelKey?: string; // 大模型 KEY
+    largeModelApi?: string; // 大模型 API 接口地址
+    largeModelKey?: string; // 大模型 API 密钥
     largeModelName?: string; // 大模型名称
     largeModelMaxTokens?: number; // 大模型最大 token 数
-    largeModelTemperature?: number; // 大模型温度参数
+    largeModelTemperature?: number; // 大模型生成多样性的温度参数
     namingRules?: string; // 命名规则
-    debugMode?: boolean; // 调试模式
+    debugMode?: boolean; // 是否启用调试模式
+    customTranslatePrompt?: string; // 自定义翻译提示词
+    customNamingPrompt?: string; // 自定义命名提示词
 }
 
-// AiTranslate 类实现了 ITranslate 接口
+// AiTranslate 类，实现了 ITranslate 接口
 export class AiTranslate implements ITranslate {
-    // 添加翻译源 ID 属性
+    // 翻译引擎的唯一标识符
     readonly id = 'ai-powered-comment-translate-extension';
 
-    // 添加翻译源名称属性
+    // 翻译引擎的名称
     readonly name = 'AI translate';
 
     // 最大翻译文本长度
@@ -37,39 +39,52 @@ export class AiTranslate implements ITranslate {
         return 3000;
     }
 
-    private _defaultOption: TranslateOption; // 默认翻译选项
+    private _defaultOption: TranslateOption; // 默认的翻译选项
 
     constructor() {
         this._defaultOption = this.createOption(); // 初始化默认选项
-        // 监听配置变化事件
+        // 监听配置变化事件，更新默认选项
         workspace.onDidChangeConfiguration(async eventNames => {
             if (eventNames.affectsConfiguration(PREFIXCONFIG)) {
-                this._defaultOption = this.createOption(); // 更新默认选项
+                this._defaultOption = this.createOption(); // 更新默认翻译选项
             }
         });
     }
 
     // 创建翻译选项
-    createOption() {
+    createOption(): TranslateOption {
         const defaultOption: TranslateOption = {
-            largeModelApi: getConfig<string>('largeModelApi'), // 获取大模型 API 的配置
-            largeModelKey: getConfig<string>('largeModelKey'), // 获取大模型 KEY 的配置
-            largeModelName: getConfig<string>('largeModelName'), // 获取大模型名称的配置
-            largeModelMaxTokens: getConfig<number>('largeModelMaxTokens'), // 获取大模型最大 token 数的配置
-            largeModelTemperature: getConfig<number>('largeModelTemperature'), // 获取大模型温度参数的配置
-            namingRules: getConfig<string>('namingRules'), // 获取命名规则的配置
-            debugMode: getConfig<boolean>('debugMode') // 获取调试模式的配置
+            largeModelApi: getConfig<string>('largeModelApi'), // 获取大模型 API 接口地址
+            largeModelKey: getConfig<string>('largeModelKey'), // 获取大模型 API 密钥
+            largeModelName: getConfig<string>('largeModelName'), // 获取大模型名称
+            largeModelMaxTokens: getConfig<number>('largeModelMaxTokens'), // 获取大模型最大 token 数
+            largeModelTemperature: getConfig<number>('largeModelTemperature'), // 获取大模型温度参数
+            namingRules: getConfig<string>('namingRules'), // 获取命名规则
+            debugMode: getConfig<boolean>('debugMode'), // 获取调试模式状态
+            customTranslatePrompt: getConfig<string>('customTranslatePrompt'), // 获取自定义翻译提示词
+            customNamingPrompt: getConfig<string>('customNamingPrompt') // 获取自定义命名提示词
         };
         return defaultOption;
     }
 
-    //创建处理日志信息函数
-    async logToChannel(message) {
+    // 将日志信息输出到调试面板
+    async logToChannel(message: string) {
         if (this._defaultOption.debugMode) {
             outputChannel.show();
             outputChannel.appendLine(message);
         } else {
             outputChannel.dispose();
+        }
+    }
+
+    // 检查自定义提示词的格式
+    private checkCustomPrompt(type: 'translate' | 'naming', prompt: string): boolean {
+        if (type === 'translate') {
+            return prompt.includes('${targetLang}') && prompt.includes('${content}');
+        } else {
+            return prompt.includes('${variableName}') &&
+                prompt.includes('${paragraph}') &&
+                prompt.includes('${languageId}');
         }
     }
 
@@ -101,6 +116,7 @@ export class AiTranslate implements ITranslate {
         }
 
         try {
+            // 如果目标语言是 auto，默认翻译成中文
             const targetLang = to === 'auto' ? 'zh-CN' : to;
             const maxTokens = this._defaultOption.largeModelMaxTokens === 0 ? undefined : (this._defaultOption.largeModelMaxTokens || 2048);
 
@@ -116,12 +132,26 @@ export class AiTranslate implements ITranslate {
                 temperature: this._defaultOption.largeModelTemperature
             })}\n`;
 
-            const data = {
+            let promptContent: string;
+
+            if (this._defaultOption.customTranslatePrompt) {
+                if (!this.checkCustomPrompt('translate', this._defaultOption.customTranslatePrompt)) {
+                    await window.showErrorMessage('翻译提示词格式错误：必须包含 ${targetLang} 和 ${content} 参数');
+                    throw new Error('翻译提示词格式错误');
+                }
+                promptContent = this._defaultOption.customTranslatePrompt
+                    .replace('${targetLang}', targetLang)
+                    .replace('${content}', content);
+            } else {
+                promptContent = `Please act as a translator, check if the sentences or words are accurate, translate naturally, smoothly, and idiomatically, use professional computer terminology for accurate translation of comments or functions, no additional unnecessary additions are needed. Translate the following text into ${targetLang}:\n${content}`;
+            }
+
+            const data: any = {
                 model: this._defaultOption.largeModelName,
                 messages: [
                     {
                         role: "user",
-                        content: `Please act as a translator, check if the sentences or words are accurate, translate naturally, smoothly, and idiomatically, use professional computer terminology for accurate translation of comments or functions, no additional unnecessary additions are needed. Translate the following text into ${targetLang}:\n${content}`
+                        content: promptContent
                     }
                 ],
                 temperature: this._defaultOption.largeModelTemperature || 0.2,
@@ -138,14 +168,13 @@ export class AiTranslate implements ITranslate {
                 contentPreview: content.substring(0, 100) + (content.length > 100 ? '...' : '')
             });
 
-            // 在此处可继续累加 debugInfo
             debugInfo += `发送翻译请求: ${JSON.stringify({
                 url,
                 model: data.model,
                 messages: [
                     {
                         role: "user",
-                        content: `Please act as a translator, check if the sentences or words are accurate, translate naturally, smoothly, and idiomatically, use professional computer terminology for accurate translation of comments or functions, no additional unnecessary additions are needed. Translate the following text into ${targetLang}:\n${content}`
+                        content: promptContent
                     }
                 ],
                 contentPreview: content.substring(0, 100) + (content.length > 100 ? '...' : '')
@@ -188,7 +217,7 @@ export class AiTranslate implements ITranslate {
                 preview: result.substring(0, 100) + (result.length > 100 ? '...' : '')
             })}\n`;
 
-            // 统一输出调试信息
+            // 输出调试信息
             this.logToChannel(debugInfo);
 
             return result;
@@ -199,43 +228,40 @@ export class AiTranslate implements ITranslate {
                 status: error.response?.status
             });
 
-            // 可在此处继续累加 debugInfo 并输出
             debugInfo += `翻译失败: ${JSON.stringify({
                 error: error.message,
                 response: error.response?.data,
                 status: error.response?.status
             })}\n`;
 
-            // 统一输出调试信息
+            // 输出调试信息
             this.logToChannel(debugInfo);
 
             throw new Error(`翻译失败: ${error.response?.data?.error?.message || error.message}`);
         }
     }
 
-    // AI命名
+    // AI命名方法
     async aiNaming(variableName: string, languageId: string): Promise<string> {
         const editor = vscode.window.activeTextEditor;
         // 用于收集调试信息
         let debugInfo = '';
 
         if (!editor) {
-
             debugInfo += '未找到活动编辑器\n';
-
             throw new Error('未找到活动编辑器');
         }
 
         // 获取选中文本的范围
         const selection = editor.selection;
 
-        // 获取完整段落文本
+        // 获取变量所在的完整段落文本
         const paragraph = await this.getVariableParagraph(editor.document, selection.start.line);
         console.log('变量所在段落:', paragraph);
 
         debugInfo += `变量所在段落: ${paragraph}\n`;
 
-        // 原有的翻译逻辑
+        // 开始 AI 命名逻辑
         console.log('开始AI命名:', {
             variableName,
             languageId,
@@ -252,27 +278,35 @@ export class AiTranslate implements ITranslate {
 
         if (!url || !this._defaultOption.largeModelKey) {
             debugInfo += '配置错误: API信息不完整\n';
-
             throw new Error('请配置 API 相关信息');
         }
 
-        let customContent: string;// 自定义发送的内容
+        let promptContent: string;
 
-        if (this._defaultOption.namingRules == "default") {
-            customContent = `Please determine whether "${variableName}" in "${paragraph}" is a class name, method name, function name, or other based on ${languageId}. Then, according to the standard naming conventions of ${languageId}, translate "${variableName}" into English using professional language, and directly return the translated result of "${variableName}" without any explanation or special symbols.`;
+        if (this._defaultOption.customNamingPrompt) {
+            if (!this.checkCustomPrompt('naming', this._defaultOption.customNamingPrompt)) {
+                await window.showErrorMessage('命名提示词格式错误：必须包含 ${variableName}、${paragraph}、${languageId} 参数');
+                throw new Error('命名提示词格式错误');
+            }
+            promptContent = this._defaultOption.customNamingPrompt
+                .replace(/\${variableName}/g, variableName)
+                .replace('${paragraph}', paragraph)
+                .replace('${languageId}', languageId);
+        } else if (this._defaultOption.namingRules == "default") {
+            promptContent = `Please determine whether "${variableName}" in "${paragraph}" is a class name, method name, function name, or other based on ${languageId}. Then, according to the standard naming conventions of ${languageId}, translate "${variableName}" into English using professional language, and directly return the translated result of "${variableName}" without any explanation or special symbols.`;
         } else {
-            customContent = `Please determine whether "${variableName}" in "${paragraph}" is a class name, method name, function name, or other based on ${languageId}. Then, according to the standard specifications of ${languageId} and the naming rules "${this._defaultOption.namingRules}", translate "${variableName}" into English using professional language, and directly return the translated result of "${variableName}" without any explanation or special symbols.`;
+            promptContent = `Please determine whether "${variableName}" in "${paragraph}" is a class name, method name, function name, or other based on ${languageId}. Then, according to the standard specifications of ${languageId} and the naming rules "${this._defaultOption.namingRules}", translate "${variableName}" into English using professional language, and directly return the translated result of "${variableName}" without any explanation or special symbols.`;
         }
 
         try {
             const maxTokens = this._defaultOption.largeModelMaxTokens === 0 ? undefined : (this._defaultOption.largeModelMaxTokens || 2048);
 
-            const data = {
+            const data: any = {
                 model: this._defaultOption.largeModelName,
                 messages: [
                     {
                         role: "user",
-                        content: customContent
+                        content: promptContent
                     }
                 ],
                 temperature: this._defaultOption.largeModelTemperature || 0.2,
@@ -283,12 +317,12 @@ export class AiTranslate implements ITranslate {
                 data['max_tokens'] = maxTokens;
             }
 
-            console.log('发送翻译请求:', {
+            console.log('发送命名请求:', {
                 url,
                 data
             });
 
-            debugInfo += `发送翻译请求: ${JSON.stringify({
+            debugInfo += `发送命名请求: ${JSON.stringify({
                 url,
                 data
             })}\n`;
@@ -301,12 +335,12 @@ export class AiTranslate implements ITranslate {
                 timeout: 30000
             });
 
-            console.log('收到翻译响应:', {
+            console.log('收到命名响应:', {
                 status: res.status,
                 data: res.data
             });
 
-            debugInfo += `收到翻译响应: ${JSON.stringify({
+            debugInfo += `收到命名响应: ${JSON.stringify({
                 status: res.status,
                 data: res.data
             })}\n`;
@@ -320,44 +354,46 @@ export class AiTranslate implements ITranslate {
             }
 
             const result = res.data.choices[0].message.content.trim();
-            console.log('翻译结果:', result);
+            console.log('命名完成:', result);
 
+            // 输出调试信息
             this.logToChannel(debugInfo);
             return result;
         } catch (error: any) {
-            console.error('翻译变量名失败:', {
+            console.error('变量命名失败:', {
                 error: error.message,
                 response: error.response?.data,
                 status: error.response?.status
             });
 
-            debugInfo += `翻译变量名失败: ${JSON.stringify({
+            debugInfo += `变量命名失败: ${JSON.stringify({
                 error: error.message,
                 response: error.response?.data,
                 status: error.response?.status
             })}\n`;
+
+            // 输出调试信息
             this.logToChannel(debugInfo);
 
             throw new Error(`变量名翻译失败: ${error.message}`);
         }
     }
 
-    // 更新链接方法
+    // 生成链接方法，用于返回翻译后的结果链接
     link(content: string, { to = 'auto' }: ITranslateOptions): string {
-        return content; // 由于使用 API 翻译，直接返回原文
+        return content; // 由于使用 API 翻译，无需返回链接，直接返回原文
     }
 
-    // 支持所有语言
+    // 判断是否支持指定的源语言
     isSupported(src: string): boolean {
-        return true;
+        return true; // 支持所有语言
     }
 
+    // 获取变量所在的完整段落文本
     async getVariableParagraph(document: vscode.TextDocument, lineNumber: number): Promise<string> {
-        // 获取当前行的缩进级别
+        // 获取当前行的文本
         const currentLine = document.lineAt(lineNumber);
-        const currentIndent = currentLine.firstNonWhitespaceCharacterIndex;
-
-        // 只返回当前行
+        // 仅返回当前行的文本内容
         return currentLine.text.trim();
     }
 }

@@ -2,10 +2,10 @@
   "name": "ai-powered-comment-translate-extension",
   "displayName": "Comment Translate for AI",
   "description": "This is the translation source extension for the Comment Translate plugin, which supports calls to large models compatible with the OpenAI API",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "publisher": "Cheng-MaoMao",
   "engines": {
-    "vscode": "^1.85.0"
+    "vscode": "^1.96.4"
   },
   "categories": [
     "AI",
@@ -93,6 +93,16 @@
           ],
           "default": false,
           "markdownDescription": "%config.debugMode.desc%"
+        },
+        "aiTranslate.customTranslatePrompt": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "%config.aiTranslate.customTranslatePrompt%"
+        },
+        "aiTranslate.customNamingPrompt": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "%config.aiTranslate.customNamingPrompt%"
         }
       }
     },
@@ -128,7 +138,7 @@
     "@types/glob": "^7.1.4",
     "@types/mocha": "^9.0.0",
     "@types/node": "14.x",
-    "@types/vscode": "^1.63.0",
+    "@types/vscode": "^1.96.0",
     "@typescript-eslint/eslint-plugin": "^5.1.0",
     "@typescript-eslint/parser": "^5.1.0",
     "@vscode/test-electron": "^1.6.2",
@@ -139,7 +149,7 @@
   },
   "dependencies": {
     "axios": "^1.x.x",
-    "comment-translate-manager": "^0.0.5",
+    "comment-translate-manager": "latest",
     "querystring": "^0.2.1"
   }
 }

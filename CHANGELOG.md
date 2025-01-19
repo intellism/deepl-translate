@@ -10,6 +10,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Changed
 
+- ✨ 添加了自定义AI提示词功能 [#1](https://github.com/Cheng-MaoMao/comment-translate-ai/issues/1)
+
+## [0.0.7] - 2025-01-20
+
+### Changed
+
 - 🤖 优化了AI提示词
 
 ## [0.0.6] - 2025-01-02
