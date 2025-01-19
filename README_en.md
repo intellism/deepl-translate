@@ -58,12 +58,12 @@ Configure the following options in VS Code settings:
 
 **Custom Naming Prompt**
 
-|             Parameter             |                       Description                       |          |
-| :--------------------------------: | :-----------------------------------------------------: | -------- |
-|          ${variableName}          |       The variable name currently being processed       | Required |
-|            ${paragraph}            |       The paragraph where the variable is located       | Required |
-|           ${languageId}           |       The language identifier of the current file       | Required |
-| ${this._defaultOption.namingRules} | Naming Rules (controlled by Ai Translate: Naming Rules) | Optional |
+|               Parameter               |                       Description                       |          |
+| :------------------------------------: | :-----------------------------------------------------: | -------- |
+|          `${variableName}`          |       The variable name currently being processed       | Required |
+|            `${paragraph}`            |       The paragraph where the variable is located       | Required |
+|           `${languageId}`           |       The language identifier of the current file       | Required |
+| `${this._defaultOption.namingRules}` | Naming Rules (controlled by Ai Translate: Naming Rules) | Optional |
 
 ```
 Example:Please determine whether "${variableName}" in "${paragraph}" is a class name, method name, function name, or other based on ${languageId}. Then, according to the standard specifications of ${languageId} and the naming rules "${this._defaultOption.namingRules}", translate "${variableName}" into English using professional language, and directly return the translated result of "${variableName}" without any explanation or special symbols.
@@ -71,10 +71,10 @@ Example:Please determine whether "${variableName}" in "${paragraph}" is a class 
 
 **Custom translation prompt words**
 
-|   Parameter   |             Description             |          |
-| :-----------: | :---------------------------------: | -------- |
-| ${targetLang} | The target language for translation | Required |
-|  ${content}  |      Content to be translated      | Required |
+|     Parameter     |             Description             |          |
+| :---------------: | :---------------------------------: | -------- |
+| `${targetLang}` | The target language for translation | Required |
+|  `${content}`  |      Content to be translated      | Required |
 
 ```
 Example:Please act as a translator, check if the sentences or words are accurate, translate naturally, smoothly, and idiomatically, use professional computer terminology for accurate translation of comments or functions, no additional unnecessary additions are needed. Translate the following text into ${targetLang}:\n${content}`
