@@ -54,7 +54,7 @@ Configure the following options in VS Code settings:
 
 ### Custom AI prompts
 
-*The prompt must include the following parameters, with the parameter content automatically retrieved by the plugin*
+*The prompt must include the following parameters, which will be automatically retrieved by the plugin*
 
 **Custom Naming Prompt**
 
@@ -116,6 +116,11 @@ Issues and Pull Requests are welcome!
 ### 0.0.7
 
 - ✨ The feature for adding custom AI prompts has been added [#1](https://github.com/Cheng-MaoMao/comment-translate-ai/issues/1)
+
+### 0.0.8
+
+- 🔧 Optimization Settings Interface
+- 📤 Add streaming support
 
 ## 🙏 Acknowledgments
 

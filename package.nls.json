@@ -13,6 +13,7 @@
     "config.namingRules.hungarian": "Example: Hungarian notation",
     "config.aiTranslate.aiNaming": "AI Naming",
     "config.debugMode.desc": "Debug mode",
-    "config.aiTranslate.customTranslatePrompt": "Custom translation prompt, must include the `${targetLang}` and `${content}` parameters.",
-    "config.aiTranslate.customNamingPrompt": "Custom naming prompt, must include the `${variableName}`, `${paragraph}`, and `${languageId}` parameters."
+    "config.aiTranslate.customTranslatePrompt": "Custom translation prompt, must include the `${targetLang}` and `${content}` parameters",
+    "config.aiTranslate.customNamingPrompt": "Custom naming prompt, must include the `${variableName}`, `${paragraph}`, and `${languageId}` parameters",
+    "config.aiTranslate.streaming": "Enable streaming"
 }

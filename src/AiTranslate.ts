@@ -2,7 +2,6 @@ import axios from 'axios'; // 导入 axios 库，用于发送 HTTP 请求
 import * as vscode from 'vscode'; // 导入 VS Code 的所有模块
 import { workspace, window } from 'vscode'; // 从 VS Code 导入 workspace 和 window 模块
 import { ITranslate, ITranslateOptions } from 'comment-translate-manager'; // 导入 ITranslate 和 ITranslateOptions 接口
-import { log } from 'console';
 
 const PREFIXCONFIG = 'aiTranslate'; // 配置前缀，用于获取 AI 翻译相关的配置
 const outputChannel = vscode.window.createOutputChannel('AI Translate'); // 创建输出面板，用于显示调试信息
@@ -24,6 +23,7 @@ interface TranslateOption {
     debugMode?: boolean; // 是否启用调试模式
     customTranslatePrompt?: string; // 自定义翻译提示词
     customNamingPrompt?: string; // 自定义命名提示词
+    streaming?: boolean; // 是否启用流式翻译
 }
 
 // AiTranslate 类，实现了 ITranslate 接口
@@ -62,7 +62,8 @@ export class AiTranslate implements ITranslate {
             namingRules: getConfig<string>('namingRules'), // 获取命名规则
             debugMode: getConfig<boolean>('debugMode'), // 获取调试模式状态
             customTranslatePrompt: getConfig<string>('customTranslatePrompt'), // 获取自定义翻译提示词
-            customNamingPrompt: getConfig<string>('customNamingPrompt') // 获取自定义命名提示词
+            customNamingPrompt: getConfig<string>('customNamingPrompt'), // 获取自定义命名提示词
+            streaming: getConfig<boolean>('streaming') // 获取流式翻译状态
         };
         return defaultOption;
     }
@@ -118,7 +119,7 @@ export class AiTranslate implements ITranslate {
         try {
             // 如果目标语言是 auto，默认翻译成中文
             const targetLang = to === 'auto' ? 'zh-CN' : to;
-            const maxTokens = this._defaultOption.largeModelMaxTokens === 0 ? undefined : (this._defaultOption.largeModelMaxTokens || 2048);
+            const maxTokens = this._defaultOption.largeModelMaxTokens === 0 ? undefined : (this._defaultOption.largeModelMaxTokens);
 
             console.log('翻译配置:', {
                 targetLang,
@@ -146,6 +147,7 @@ export class AiTranslate implements ITranslate {
                 promptContent = `Please act as a translator, check if the sentences or words are accurate, translate naturally, smoothly, and idiomatically, use professional computer terminology for accurate translation of comments or functions, no additional unnecessary additions are needed. Translate the following text into ${targetLang}:\n${content}`;
             }
 
+            // 修改请求数据，添加 stream 参数
             const data: any = {
                 model: this._defaultOption.largeModelName,
                 messages: [
@@ -155,16 +157,14 @@ export class AiTranslate implements ITranslate {
                     }
                 ],
                 temperature: this._defaultOption.largeModelTemperature || 0.2,
-                stream: false
+                max_tokens: this._defaultOption.largeModelMaxTokens,
+                stream: this._defaultOption.streaming // 使用配置中的 streaming 参数
             };
-
-            if (maxTokens) {
-                data['max_tokens'] = maxTokens;
-            }
 
             console.log('发送翻译请求:', {
                 url,
                 model: data.model,
+                maxTokens: data.max_tokens,
                 contentPreview: content.substring(0, 100) + (content.length > 100 ? '...' : '')
             });
 
@@ -180,47 +180,109 @@ export class AiTranslate implements ITranslate {
                 contentPreview: content.substring(0, 100) + (content.length > 100 ? '...' : '')
             })}\n`;
 
-            const res = await axios.post(url, data, {
-                headers: {
-                    'Authorization': `Bearer ${this._defaultOption.largeModelKey}`,
-                    'Content-Type': 'application/json'
-                },
-                timeout: 30000
-            });
+            // 根据是否启用流式传输选择不同的处理方式
+            if (this._defaultOption.streaming) {
+                debugInfo += `使用流式传输模式\n`;
 
-            console.log('收到翻译响应:', {
-                status: res.status,
-                hasChoices: !!res.data?.choices?.length
-            });
+                // 使用流式传输模式发送请求
+                const response = await axios.post(url, data, {
+                    headers: {
+                        'Authorization': `Bearer ${this._defaultOption.largeModelKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    responseType: 'stream',
+                    timeout: 30000
+                });
 
-            debugInfo += `收到翻译响应: ${JSON.stringify({
-                status: res.status,
-                hasChoices: !!res.data?.choices?.length
-            })}\n`;
+                // 处理流式响应
+                let result = '';
+                debugInfo += `开始接收流式数据\n`;
 
-            if (!res.data?.choices?.[0]?.message?.content) {
-                console.error('API响应格式错误:', JSON.stringify(res.data, null, 2));
+                // 创建 Promise 来处理流式数据
+                const streamResult = await new Promise<string>((resolve, reject) => {
+                    response.data.on('data', (chunk: Buffer) => {
+                        const lines = chunk.toString().split('\n').filter(line => line.trim() !== '');
+                        for (const line of lines) {
+                            if (line.includes('[DONE]')) {
+                                continue;
+                            }
+                            try {
+                                const jsonStr = line.replace(/^data: /, '').trim();
+                                if (jsonStr) {
+                                    const json = JSON.parse(jsonStr);
+                                    if (json.choices[0].delta?.content) {
+                                        result += json.choices[0].delta.content;
+                                        debugInfo += `接收流式数据片段: ${json.choices[0].delta.content}\n`;
+                                    }
+                                }
+                            } catch (e) {
+                                debugInfo += `解析流式数据错误: ${e}\n`;
+                                console.error('解析流式数据错误:', e);
+                            }
+                        }
+                    });
 
-                debugInfo += `API响应格式错误: ${JSON.stringify(res.data, null, 2)}\n`;
+                    response.data.on('end', () => {
+                        debugInfo += `流式数据传输完成\n`;
+                        resolve(result.trim());
+                    });
 
-                throw new Error('API响应格式不符合标准');
+                    response.data.on('error', (err: Error) => {
+                        debugInfo += `流式数据传输错误: ${err.message}\n`;
+                        reject(err);
+                    });
+                });
+
+                // 输出调试信息
+                this.logToChannel(debugInfo);
+                return streamResult;
+
+            } else {
+                debugInfo += `使用普通请求模式\n`;
+                // 原有的非流式处理逻辑
+                const res = await axios.post(url, data, {
+                    headers: {
+                        'Authorization': `Bearer ${this._defaultOption.largeModelKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 30000
+                });
+
+                console.log('收到翻译响应:', {
+                    status: res.status,
+                    hasChoices: !!res.data?.choices?.length
+                });
+
+                debugInfo += `收到翻译响应: ${JSON.stringify({
+                    status: res.status,
+                    hasChoices: !!res.data?.choices?.length
+                })}\n`;
+
+                if (!res.data?.choices?.[0]?.message?.content) {
+                    console.error('API响应格式错误:', JSON.stringify(res.data, null, 2));
+
+                    debugInfo += `API响应格式错误: ${JSON.stringify(res.data, null, 2)}\n`;
+
+                    throw new Error('API响应格式不符合标准');
+                }
+
+                const result = res.data.choices[0].message.content.trim();
+                console.log('翻译完成:', {
+                    resultLength: result.length,
+                    preview: result.substring(0, 100) + (result.length > 100 ? '...' : '')
+                });
+
+                debugInfo += `翻译完成: ${JSON.stringify({
+                    resultLength: result.length,
+                    preview: result.substring(0, 100) + (result.length > 100 ? '...' : '')
+                })}\n`;
+
+                // 输出调试信息
+                this.logToChannel(debugInfo);
+
+                return result;
             }
 
-            const result = res.data.choices[0].message.content.trim();
-            console.log('翻译完成:', {
-                resultLength: result.length,
-                preview: result.substring(0, 100) + (result.length > 100 ? '...' : '')
-            });
-
-            debugInfo += `翻译完成: ${JSON.stringify({
-                resultLength: result.length,
-                preview: result.substring(0, 100) + (result.length > 100 ? '...' : '')
-            })}\n`;
-
-            // 输出调试信息
-            this.logToChannel(debugInfo);
-
-            return result;
         } catch (error: any) {
             console.error('翻译失败:', {
                 error: error.message,
@@ -299,7 +361,6 @@ export class AiTranslate implements ITranslate {
         }
 
         try {
-            const maxTokens = this._defaultOption.largeModelMaxTokens === 0 ? undefined : (this._defaultOption.largeModelMaxTokens || 2048);
 
             const data: any = {
                 model: this._defaultOption.largeModelName,
@@ -310,55 +371,99 @@ export class AiTranslate implements ITranslate {
                     }
                 ],
                 temperature: this._defaultOption.largeModelTemperature || 0.2,
-                stream: false
+                max_tokens: this._defaultOption.largeModelMaxTokens,
+                stream: this._defaultOption.streaming // 添加流式传输配置
             };
 
-            if (maxTokens) {
-                data['max_tokens'] = maxTokens;
+            data['max_tokens'] = this._defaultOption.largeModelMaxTokens;
+
+            // 添加流式处理逻辑
+            if (this._defaultOption.streaming) {
+                debugInfo += `使用流式传输模式进行命名\n`;
+
+                const response = await axios.post(url, data, {
+                    headers: {
+                        'Authorization': `Bearer ${this._defaultOption.largeModelKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    responseType: 'stream',
+                    timeout: 30000
+                });
+
+                let result = '';
+                debugInfo += `开始接收流式数据\n`;
+
+                const streamResult = await new Promise<string>((resolve, reject) => {
+                    response.data.on('data', (chunk: Buffer) => {
+                        const lines = chunk.toString().split('\n').filter(line => line.trim() !== '');
+                        for (const line of lines) {
+                            if (line.includes('[DONE]')) continue;
+                            try {
+                                const jsonStr = line.replace(/^data: /, '').trim();
+                                if (jsonStr) {
+                                    const json = JSON.parse(jsonStr);
+                                    if (json.choices[0].delta?.content) {
+                                        result += json.choices[0].delta.content;
+                                        debugInfo += `接收流式数据片段: ${json.choices[0].delta.content}\n`;
+                                    }
+                                }
+                            } catch (e) {
+                                debugInfo += `解析流式数据错误: ${e}\n`;
+                                console.error('解析流式数据错误:', e);
+                            }
+                        }
+                    });
+
+                    response.data.on('end', () => {
+                        debugInfo += `流式数据传输完成\n`;
+                        resolve(result.trim());
+                    });
+
+                    response.data.on('error', (err: Error) => {
+                        debugInfo += `流式数据传输错误: ${err.message}\n`;
+                        reject(err);
+                    });
+                });
+
+                this.logToChannel(debugInfo);
+                return streamResult;
+
+            } else {
+                debugInfo += `使用普通请求模式进行命名\n`;
+
+                const res = await axios.post(url, data, {
+                    headers: {
+                        'Authorization': `Bearer ${this._defaultOption.largeModelKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 30000
+                });
+
+                console.log('收到命名响应:', {
+                    status: res.status,
+                    data: res.data
+                });
+
+                debugInfo += `收到命名响应: ${JSON.stringify({
+                    status: res.status,
+                    data: res.data
+                })}\n`;
+
+                if (!res.data?.choices?.[0]?.message?.content) {
+                    console.error('API响应格式不符合标准:', res.data);
+
+                    debugInfo += `API响应格式不符合标准: ${JSON.stringify(res.data)}\n`;
+
+                    throw new Error('API响应格式不符合标准');
+                }
+
+                const result = res.data.choices[0].message.content.trim();
+                console.log('命名完成:', result);
+
+                // 输出调试信息
+                this.logToChannel(debugInfo);
+                return result;
             }
-
-            console.log('发送命名请求:', {
-                url,
-                data
-            });
-
-            debugInfo += `发送命名请求: ${JSON.stringify({
-                url,
-                data
-            })}\n`;
-
-            const res = await axios.post(url, data, {
-                headers: {
-                    'Authorization': `Bearer ${this._defaultOption.largeModelKey}`,
-                    'Content-Type': 'application/json'
-                },
-                timeout: 30000
-            });
-
-            console.log('收到命名响应:', {
-                status: res.status,
-                data: res.data
-            });
-
-            debugInfo += `收到命名响应: ${JSON.stringify({
-                status: res.status,
-                data: res.data
-            })}\n`;
-
-            if (!res.data?.choices?.[0]?.message?.content) {
-                console.error('API响应格式不符合标准:', res.data);
-
-                debugInfo += `API响应格式不符合标准: ${JSON.stringify(res.data)}\n`;
-
-                throw new Error('API响应格式不符合标准');
-            }
-
-            const result = res.data.choices[0].message.content.trim();
-            console.log('命名完成:', result);
-
-            // 输出调试信息
-            this.logToChannel(debugInfo);
-            return result;
         } catch (error: any) {
             console.error('变量命名失败:', {
                 error: error.message,

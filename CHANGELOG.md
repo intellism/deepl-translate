@@ -10,9 +10,16 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Changed
 
+- 🔧 优化设置界面
+- 📤 添加流式传输支持
+
+## [0.0.8] - 2025-01-20
+
+### Changed
+
 - ✨ 添加了自定义AI提示词功能 [#1](https://github.com/Cheng-MaoMao/comment-translate-ai/issues/1)
 
-## [0.0.7] - 2025-01-20
+## [0.0.7] - 2025-01-19
 
 ### Changed
 
