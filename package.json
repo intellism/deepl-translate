@@ -38,9 +38,18 @@
     "configuration": {
       "title": "%config.title%",
       "properties": {
+        "aiTranslate.modelType": {
+          "type": "string",
+          "enum": [
+            "OpenAI",
+            "Gemini"
+          ],
+          "default": "OpenAI",
+          "markdownDescription": "%config.modelType.desc%"
+        },
         "aiTranslate.largeModelApi": {
           "type": "string",
-          "default": "",
+          "default": "https://api.openai.com/v1",
           "markdownDescription": "%config.largeModelApi.desc%"
         },
         "aiTranslate.largeModelKey": {
@@ -85,12 +94,6 @@
           "default": "default",
           "markdownDescription": "%config.namingRules.desc%"
         },
-        "aiTranslate.debugMode": {
-          "type": "boolean",
-          "order": 0,
-          "default": false,
-          "markdownDescription": "%config.debugMode.desc%"
-        },
         "aiTranslate.customTranslatePrompt": {
           "type": "string",
           "default": "",
@@ -103,7 +106,6 @@
         },
         "aiTranslate.streaming": {
           "type": "boolean",
-          "order": 0,
           "default": false,
           "markdownDescription": "%config.aiTranslate.streaming%"
         }

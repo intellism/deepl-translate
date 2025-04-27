@@ -14,16 +14,16 @@ export function getConfig<T>(key: string): T | undefined {
 
 // 定义翻译选项的接口
 interface TranslateOption {
-    largeModelApi?: string; // 大模型 API 接口地址
-    largeModelKey?: string; // 大模型 API 密钥
-    largeModelName?: string; // 大模型名称
-    largeModelMaxTokens?: number; // 大模型最大 token 数
-    largeModelTemperature?: number; // 大模型生成多样性的温度参数
-    namingRules?: string; // 命名规则
-    debugMode?: boolean; // 是否启用调试模式
-    customTranslatePrompt?: string; // 自定义翻译提示词
-    customNamingPrompt?: string; // 自定义命名提示词
-    streaming?: boolean; // 是否启用流式翻译
+    modelType?: 'OpenAI' | 'Gemini';
+    largeModelApi?: string;
+    largeModelKey?: string;
+    largeModelName?: string;
+    largeModelMaxTokens?: number;
+    largeModelTemperature?: number;
+    namingRules?: string;
+    customTranslatePrompt?: string;
+    customNamingPrompt?: string;
+    streaming?: boolean;
 }
 
 // AiTranslate 类，实现了 ITranslate 接口
@@ -54,28 +54,18 @@ export class AiTranslate implements ITranslate {
     // 创建翻译选项
     createOption(): TranslateOption {
         const defaultOption: TranslateOption = {
-            largeModelApi: getConfig<string>('largeModelApi'), // 获取大模型 API 接口地址
-            largeModelKey: getConfig<string>('largeModelKey'), // 获取大模型 API 密钥
-            largeModelName: getConfig<string>('largeModelName'), // 获取大模型名称
-            largeModelMaxTokens: getConfig<number>('largeModelMaxTokens'), // 获取大模型最大 token 数
-            largeModelTemperature: getConfig<number>('largeModelTemperature'), // 获取大模型温度参数
-            namingRules: getConfig<string>('namingRules'), // 获取命名规则
-            debugMode: getConfig<boolean>('debugMode'), // 获取调试模式状态
-            customTranslatePrompt: getConfig<string>('customTranslatePrompt'), // 获取自定义翻译提示词
-            customNamingPrompt: getConfig<string>('customNamingPrompt'), // 获取自定义命名提示词
-            streaming: getConfig<boolean>('streaming') // 获取流式翻译状态
+            modelType: getConfig<'OpenAI' | 'Gemini'>('modelType'),
+            largeModelApi: getConfig<string>('largeModelApi'),
+            largeModelKey: getConfig<string>('largeModelKey'),
+            largeModelName: getConfig<string>('largeModelName'),
+            largeModelMaxTokens: getConfig<number>('largeModelMaxTokens'),
+            largeModelTemperature: getConfig<number>('largeModelTemperature'),
+            namingRules: getConfig<string>('namingRules'),
+            customTranslatePrompt: getConfig<string>('customTranslatePrompt'),
+            customNamingPrompt: getConfig<string>('customNamingPrompt'),
+            streaming: getConfig<boolean>('streaming')
         };
         return defaultOption;
-    }
-
-    // 将日志信息输出到调试面板
-    async logToChannel(message: string) {
-        if (this._defaultOption.debugMode) {
-            outputChannel.show();
-            outputChannel.appendLine(message);
-        } else {
-            outputChannel.dispose();
-        }
     }
 
     // 检查自定义提示词的格式
@@ -91,308 +81,68 @@ export class AiTranslate implements ITranslate {
 
     // 使用大模型 API 执行翻译
     async translate(content: string, { to = 'auto' }: ITranslateOptions) {
-        // 用于收集调试信息
-        let debugInfo = '';
-
-        console.log('开始翻译文本:', {
-            contentLength: content.length,
-            targetLang: to,
-            modelName: this._defaultOption.largeModelName
-        });
-
-        debugInfo += `开始翻译文本: ${JSON.stringify({
-            contentLength: content.length,
-            targetLang: to,
-            modelName: this._defaultOption.largeModelName
-        })}\n`;
-
-        const url = this._defaultOption.largeModelApi;
-
-        if (!url || !this._defaultOption.largeModelKey) {
-            console.error('配置错误: API信息不完整');
-
-            debugInfo += '配置错误: API信息不完整\n';
-
-            throw new Error('请检查 largeModelApi 和 largeModelKey 配置');
-        }
-
         try {
-            // 如果目标语言是 auto，默认翻译成中文
+            let url = this._defaultOption.largeModelApi;
+            if (!url || !this._defaultOption.largeModelKey) {
+                throw new Error('请检查 API 相关配置');
+            }
+
+            // OpenAI模式下补充完整API地址
+            if (this._defaultOption.modelType === 'OpenAI') {
+                url = `${url}/chat/completions`.replace(/\/+/g, '/');
+            }
+
             const targetLang = to === 'auto' ? 'zh-CN' : to;
-            const maxTokens = this._defaultOption.largeModelMaxTokens === 0 ? undefined : (this._defaultOption.largeModelMaxTokens);
-
-            console.log('翻译配置:', {
-                targetLang,
-                maxTokens,
-                temperature: this._defaultOption.largeModelTemperature
-            });
-
-            debugInfo += `翻译配置: ${JSON.stringify({
-                targetLang,
-                maxTokens,
-                temperature: this._defaultOption.largeModelTemperature
-            })}\n`;
 
             let promptContent: string;
-
             if (this._defaultOption.customTranslatePrompt) {
                 if (!this.checkCustomPrompt('translate', this._defaultOption.customTranslatePrompt)) {
-                    await window.showErrorMessage('翻译提示词格式错误：必须包含 ${targetLang} 和 ${content} 参数');
-                    throw new Error('翻译提示词格式错误');
+                    throw new Error('翻译提示词格式错误：必须包含 ${targetLang} 和 ${content} 参数');
                 }
                 promptContent = this._defaultOption.customTranslatePrompt
                     .replace('${targetLang}', targetLang)
                     .replace('${content}', content);
             } else {
-                promptContent = `Please act as a translator, check if the sentences or words are accurate, translate naturally, smoothly, and idiomatically, use professional computer terminology for accurate translation of comments or functions, no additional unnecessary additions are needed. Translate the following text into ${targetLang}:\n${content}`;
+                promptContent = `请充当翻译，检查句子或单词是否准确，自然、流畅、习惯地翻译，使用专业的计算机术语以准确翻译注释或功能，将以下文本翻译成${targetLang}:\n${content}
+                注意：不需要添加额外的解释说明，直接返回翻译内容。`;
             }
 
-            // 修改请求数据，添加 stream 参数
-            const data: any = {
-                model: this._defaultOption.largeModelName,
-                messages: [
-                    {
-                        role: "user",
-                        content: promptContent
-                    }
-                ],
-                temperature: this._defaultOption.largeModelTemperature || 0.2,
-                max_tokens: this._defaultOption.largeModelMaxTokens,
-                stream: this._defaultOption.streaming // 使用配置中的 streaming 参数
+            // 根据不同的模型类型构建不同的请求数据
+            let data: any;
+            let headers: any = {
+                'Authorization': `Bearer ${this._defaultOption.largeModelKey}`,
+                'Content-Type': 'application/json'
             };
 
-            console.log('发送翻译请求:', {
-                url,
-                model: data.model,
-                maxTokens: data.max_tokens,
-                contentPreview: content.substring(0, 100) + (content.length > 100 ? '...' : '')
-            });
-
-            debugInfo += `发送翻译请求: ${JSON.stringify({
-                url,
-                model: data.model,
-                messages: [
-                    {
+            if (this._defaultOption.modelType === 'OpenAI') {
+                data = {
+                    model: this._defaultOption.largeModelName,
+                    messages: [{
                         role: "user",
                         content: promptContent
-                    }
-                ],
-                contentPreview: content.substring(0, 100) + (content.length > 100 ? '...' : '')
-            })}\n`;
-
-            // 根据是否启用流式传输选择不同的处理方式
-            if (this._defaultOption.streaming) {
-                debugInfo += `使用流式传输模式\n`;
-
-                // 使用流式传输模式发送请求
-                const response = await axios.post(url, data, {
-                    headers: {
-                        'Authorization': `Bearer ${this._defaultOption.largeModelKey}`,
-                        'Content-Type': 'application/json'
-                    },
-                    responseType: 'stream',
-                    timeout: 30000
-                });
-
-                // 处理流式响应
-                let result = '';
-                debugInfo += `开始接收流式数据\n`;
-
-                // 创建 Promise 来处理流式数据
-                const streamResult = await new Promise<string>((resolve, reject) => {
-                    response.data.on('data', (chunk: Buffer) => {
-                        const lines = chunk.toString().split('\n').filter(line => line.trim() !== '');
-                        for (const line of lines) {
-                            if (line.includes('[DONE]')) {
-                                continue;
-                            }
-                            try {
-                                const jsonStr = line.replace(/^data: /, '').trim();
-                                if (jsonStr) {
-                                    const json = JSON.parse(jsonStr);
-                                    if (json.choices[0].delta?.content) {
-                                        result += json.choices[0].delta.content;
-                                        debugInfo += `接收流式数据片段: ${json.choices[0].delta.content}\n`;
-                                    }
-                                }
-                            } catch (e) {
-                                debugInfo += `解析流式数据错误: ${e}\n`;
-                                console.error('解析流式数据错误:', e);
-                            }
-                        }
-                    });
-
-                    response.data.on('end', () => {
-                        debugInfo += `流式数据传输完成\n`;
-                        resolve(result.trim());
-                    });
-
-                    response.data.on('error', (err: Error) => {
-                        debugInfo += `流式数据传输错误: ${err.message}\n`;
-                        reject(err);
-                    });
-                });
-
-                // 输出调试信息
-                this.logToChannel(debugInfo);
-                return streamResult;
-
-            } else {
-                debugInfo += `使用普通请求模式\n`;
-                // 原有的非流式处理逻辑
-                const res = await axios.post(url, data, {
-                    headers: {
-                        'Authorization': `Bearer ${this._defaultOption.largeModelKey}`,
-                        'Content-Type': 'application/json'
-                    },
-                    timeout: 30000
-                });
-
-                console.log('收到翻译响应:', {
-                    status: res.status,
-                    hasChoices: !!res.data?.choices?.length
-                });
-
-                debugInfo += `收到翻译响应: ${JSON.stringify({
-                    status: res.status,
-                    hasChoices: !!res.data?.choices?.length
-                })}\n`;
-
-                if (!res.data?.choices?.[0]?.message?.content) {
-                    console.error('API响应格式错误:', JSON.stringify(res.data, null, 2));
-
-                    debugInfo += `API响应格式错误: ${JSON.stringify(res.data, null, 2)}\n`;
-
-                    throw new Error('API响应格式不符合标准');
-                }
-
-                const result = res.data.choices[0].message.content.trim();
-                console.log('翻译完成:', {
-                    resultLength: result.length,
-                    preview: result.substring(0, 100) + (result.length > 100 ? '...' : '')
-                });
-
-                debugInfo += `翻译完成: ${JSON.stringify({
-                    resultLength: result.length,
-                    preview: result.substring(0, 100) + (result.length > 100 ? '...' : '')
-                })}\n`;
-
-                // 输出调试信息
-                this.logToChannel(debugInfo);
-
-                return result;
+                    }],
+                    temperature: this._defaultOption.largeModelTemperature || 0.2,
+                    max_tokens: this._defaultOption.largeModelMaxTokens,
+                    stream: this._defaultOption.streaming
+                };
+            } else { // Gemini模式
+                data = {
+                    contents: [{
+                        parts: [{
+                            text: promptContent
+                        }]
+                    }]
+                };
             }
 
-        } catch (error: any) {
-            console.error('翻译失败:', {
-                error: error.message,
-                response: error.response?.data,
-                status: error.response?.status
-            });
-
-            debugInfo += `翻译失败: ${JSON.stringify({
-                error: error.message,
-                response: error.response?.data,
-                status: error.response?.status
-            })}\n`;
-
-            // 输出调试信息
-            this.logToChannel(debugInfo);
-
-            throw new Error(`翻译失败: ${error.response?.data?.error?.message || error.message}`);
-        }
-    }
-
-    // AI命名方法
-    async aiNaming(variableName: string, languageId: string): Promise<string> {
-        const editor = vscode.window.activeTextEditor;
-        // 用于收集调试信息
-        let debugInfo = '';
-
-        if (!editor) {
-            debugInfo += '未找到活动编辑器\n';
-            throw new Error('未找到活动编辑器');
-        }
-
-        // 获取选中文本的范围
-        const selection = editor.selection;
-
-        // 获取变量所在的完整段落文本
-        const paragraph = await this.getVariableParagraph(editor.document, selection.start.line);
-        console.log('变量所在段落:', paragraph);
-
-        debugInfo += `变量所在段落: ${paragraph}\n`;
-
-        // 开始 AI 命名逻辑
-        console.log('开始AI命名:', {
-            variableName,
-            languageId,
-            modelName: this._defaultOption.largeModelName
-        });
-
-        debugInfo += `开始AI命名: ${JSON.stringify({
-            variableName,
-            languageId,
-            modelName: this._defaultOption.largeModelName
-        })}\n`;
-
-        const url = this._defaultOption.largeModelApi;
-
-        if (!url || !this._defaultOption.largeModelKey) {
-            debugInfo += '配置错误: API信息不完整\n';
-            throw new Error('请配置 API 相关信息');
-        }
-
-        let promptContent: string;
-
-        if (this._defaultOption.customNamingPrompt) {
-            if (!this.checkCustomPrompt('naming', this._defaultOption.customNamingPrompt)) {
-                await window.showErrorMessage('命名提示词格式错误：必须包含 ${variableName}、${paragraph}、${languageId} 参数');
-                throw new Error('命名提示词格式错误');
-            }
-            promptContent = this._defaultOption.customNamingPrompt
-                .replace(/\${variableName}/g, variableName)
-                .replace('${paragraph}', paragraph)
-                .replace('${languageId}', languageId);
-        } else if (this._defaultOption.namingRules == "default") {
-            promptContent = `Please determine whether "${variableName}" in "${paragraph}" is a class name, method name, function name, or other based on ${languageId}. Then, according to the standard naming conventions of ${languageId}, translate "${variableName}" into English using professional language, and directly return the translated result of "${variableName}" without any explanation or special symbols.`;
-        } else {
-            promptContent = `Please determine whether "${variableName}" in "${paragraph}" is a class name, method name, function name, or other based on ${languageId}. Then, according to the standard specifications of ${languageId} and the naming rules "${this._defaultOption.namingRules}", translate "${variableName}" into English using professional language, and directly return the translated result of "${variableName}" without any explanation or special symbols.`;
-        }
-
-        try {
-
-            const data: any = {
-                model: this._defaultOption.largeModelName,
-                messages: [
-                    {
-                        role: "user",
-                        content: promptContent
-                    }
-                ],
-                temperature: this._defaultOption.largeModelTemperature || 0.2,
-                max_tokens: this._defaultOption.largeModelMaxTokens,
-                stream: this._defaultOption.streaming // 添加流式传输配置
-            };
-
-            data['max_tokens'] = this._defaultOption.largeModelMaxTokens;
-
-            // 添加流式处理逻辑
-            if (this._defaultOption.streaming) {
-                debugInfo += `使用流式传输模式进行命名\n`;
-
+            if (this._defaultOption.modelType === 'OpenAI' && this._defaultOption.streaming) {
                 const response = await axios.post(url, data, {
-                    headers: {
-                        'Authorization': `Bearer ${this._defaultOption.largeModelKey}`,
-                        'Content-Type': 'application/json'
-                    },
+                    headers,
                     responseType: 'stream',
                     timeout: 30000
                 });
 
                 let result = '';
-                debugInfo += `开始接收流式数据\n`;
-
                 const streamResult = await new Promise<string>((resolve, reject) => {
                     response.data.on('data', (chunk: Buffer) => {
                         const lines = chunk.toString().split('\n').filter(line => line.trim() !== '');
@@ -404,83 +154,161 @@ export class AiTranslate implements ITranslate {
                                     const json = JSON.parse(jsonStr);
                                     if (json.choices[0].delta?.content) {
                                         result += json.choices[0].delta.content;
-                                        debugInfo += `接收流式数据片段: ${json.choices[0].delta.content}\n`;
                                     }
                                 }
                             } catch (e) {
-                                debugInfo += `解析流式数据错误: ${e}\n`;
                                 console.error('解析流式数据错误:', e);
                             }
                         }
                     });
 
-                    response.data.on('end', () => {
-                        debugInfo += `流式数据传输完成\n`;
-                        resolve(result.trim());
-                    });
-
-                    response.data.on('error', (err: Error) => {
-                        debugInfo += `流式数据传输错误: ${err.message}\n`;
-                        reject(err);
-                    });
+                    response.data.on('end', () => resolve(result.trim()));
+                    response.data.on('error', (err: Error) => reject(err));
                 });
 
-                this.logToChannel(debugInfo);
                 return streamResult;
-
             } else {
-                debugInfo += `使用普通请求模式进行命名\n`;
-
                 const res = await axios.post(url, data, {
-                    headers: {
-                        'Authorization': `Bearer ${this._defaultOption.largeModelKey}`,
-                        'Content-Type': 'application/json'
-                    },
+                    headers,
                     timeout: 30000
                 });
 
-                console.log('收到命名响应:', {
-                    status: res.status,
-                    data: res.data
-                });
-
-                debugInfo += `收到命名响应: ${JSON.stringify({
-                    status: res.status,
-                    data: res.data
-                })}\n`;
-
-                if (!res.data?.choices?.[0]?.message?.content) {
-                    console.error('API响应格式不符合标准:', res.data);
-
-                    debugInfo += `API响应格式不符合标准: ${JSON.stringify(res.data)}\n`;
-
-                    throw new Error('API响应格式不符合标准');
+                if (this._defaultOption.modelType === 'OpenAI') {
+                    if (!res.data?.choices?.[0]?.message?.content) {
+                        throw new Error('API响应格式不符合标准');
+                    }
+                    return res.data.choices[0].message.content.trim();
+                } else {
+                    if (!res.data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+                        throw new Error('API响应格式不符合标准');
+                    }
+                    return res.data.candidates[0].content.parts[0].text.trim();
                 }
-
-                const result = res.data.choices[0].message.content.trim();
-                console.log('命名完成:', result);
-
-                // 输出调试信息
-                this.logToChannel(debugInfo);
-                return result;
             }
         } catch (error: any) {
-            console.error('变量命名失败:', {
-                error: error.message,
-                response: error.response?.data,
-                status: error.response?.status
-            });
+            window.showErrorMessage(`翻译失败: ${error.message}`);
+            throw error;
+        }
+    }
 
-            debugInfo += `变量命名失败: ${JSON.stringify({
-                error: error.message,
-                response: error.response?.data,
-                status: error.response?.status
-            })}\n`;
+    // AI命名方法
+    async aiNaming(variableName: string, languageId: string): Promise<string> {
+        try {
+            const editor = vscode.window.activeTextEditor;
+            if (!editor) {
+                throw new Error('未找到活动编辑器');
+            }
 
-            // 输出调试信息
-            this.logToChannel(debugInfo);
+            const selection = editor.selection;
+            const paragraph = await this.getVariableParagraph(editor.document, selection.start.line);
 
-            throw new Error(`变量名翻译失败: ${error.message}`);
+            let url = this._defaultOption.largeModelApi;
+            if (!url || !this._defaultOption.largeModelKey) {
+                throw new Error('请配置 API 相关信息');
+            }
+
+            // OpenAI模式下补充完整API地址
+            if (this._defaultOption.modelType === 'OpenAI') {
+                url = `${url}/chat/completions`.replace(/\/+/g, '/');
+            }
+
+            let promptContent: string;
+            if (this._defaultOption.customNamingPrompt) {
+                if (!this.checkCustomPrompt('naming', this._defaultOption.customNamingPrompt)) {
+                    throw new Error('命名提示词格式错误：必须包含 ${variableName}、${paragraph}、${languageId} 参数');
+                }
+                promptContent = this._defaultOption.customNamingPrompt
+                    .replace(/\${variableName}/g, variableName)
+                    .replace('${paragraph}', paragraph)
+                    .replace('${languageId}', languageId);
+            } else if (this._defaultOption.namingRules == "default") {
+                promptContent = `请根据"${languageId}"确定"${paragraph}"中的"${variableName}"是类名、方法名、函数名还是其他。然后，根据"${languageId}"的命名规范，使用专业术语将"${variableName}"翻译成英文，并直接返回"${variableName}"的翻译结果。
+                注意：不需要添加额外的解释说明，直接返回翻译内容。`;
+            } else {
+                promptContent = `请根据"${languageId}"确定"${paragraph}"中的"${variableName}"是类名、方法名、函数名还是其他。然后，根据"${languageId}"的标准规范和命名规则"${this._defaultOption.namingRules}"，将"${variableName}"翻译成专业的英文，并直接返回"${variableName}"的翻译结果。
+                注意：不需要添加额外的解释说明，直接返回翻译内容。`;
+            }
+
+            let data: any;
+            let headers: any = {
+                'Authorization': `Bearer ${this._defaultOption.largeModelKey}`,
+                'Content-Type': 'application/json'
+            };
+
+            if (this._defaultOption.modelType === 'OpenAI') {
+                data = {
+                    model: this._defaultOption.largeModelName,
+                    messages: [{
+                        role: "user",
+                        content: promptContent
+                    }],
+                    temperature: this._defaultOption.largeModelTemperature || 0.2,
+                    max_tokens: this._defaultOption.largeModelMaxTokens,
+                    stream: this._defaultOption.streaming
+                };
+            } else {
+                data = {
+                    contents: [{
+                        parts: [{
+                            text: promptContent
+                        }]
+                    }]
+                };
+            }
+
+            if (this._defaultOption.modelType === 'OpenAI' && this._defaultOption.streaming) {
+                const response = await axios.post(url, data, {
+                    headers,
+                    responseType: 'stream',
+                    timeout: 30000
+                });
+
+                let result = '';
+                const streamResult = await new Promise<string>((resolve, reject) => {
+                    response.data.on('data', (chunk: Buffer) => {
+                        const lines = chunk.toString().split('\n').filter(line => line.trim() !== '');
+                        for (const line of lines) {
+                            if (line.includes('[DONE]')) continue;
+                            try {
+                                const jsonStr = line.replace(/^data: /, '').trim();
+                                if (jsonStr) {
+                                    const json = JSON.parse(jsonStr);
+                                    if (json.choices[0].delta?.content) {
+                                        result += json.choices[0].delta.content;
+                                    }
+                                }
+                            } catch (e) {
+                                console.error('解析流式数据错误:', e);
+                            }
+                        }
+                    });
+
+                    response.data.on('end', () => resolve(result.trim()));
+                    response.data.on('error', (err: Error) => reject(err));
+                });
+
+                return streamResult;
+            } else {
+                const res = await axios.post(url, data, {
+                    headers,
+                    timeout: 30000
+                });
+
+                if (this._defaultOption.modelType === 'OpenAI') {
+                    if (!res.data?.choices?.[0]?.message?.content) {
+                        throw new Error('API响应格式不符合标准');
+                    }
+                    return res.data.choices[0].message.content.trim();
+                } else {
+                    if (!res.data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+                        throw new Error('API响应格式不符合标准');
+                    }
+                    return res.data.candidates[0].content.parts[0].text.trim();
+                }
+            }
+        } catch (error: any) {
+            window.showErrorMessage(`变量名翻译失败: ${error.message}`);
+            throw error;
         }
     }
 
