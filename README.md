@@ -125,12 +125,18 @@
 - 🔧 优化设置界面
 - 📤 添加流式传输支持
 
+### 0.0.9
+
+- ✨ 优化大模型调用方式
+- ➕ 添加谷歌Gemini大模型调用方式
+
 ## 🙏 致谢
 
 本项目基于以下优秀的开源项目开发：
 
 - [vscode-comment-translate](https://github.com/intellism/vscode-comment-translate) - VSCode 注释翻译插件
 - [deepl-translate](https://github.com/intellism/deepl-translate) - DeepL 翻译扩展，本项目的基础代码来源
+- [deprecated-generative-ai-js](https://github.com/google-gemini/deprecated-generative-ai-js) - Google AI 为 Gemini API 提供的 JavaScript SDK
 
 特别感谢：
 

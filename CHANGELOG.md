@@ -10,6 +10,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Changed
 
+- ✨ 优化大模型调用方式
+- ➕ 添加谷歌Gemini大模型调用方式
+
+## [0.0.9] - 2025-04-28
+
+### Changed
+
 - 🔧 优化设置界面
 - 📤 添加流式传输支持
 

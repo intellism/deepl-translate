@@ -122,12 +122,18 @@ Issues and Pull Requests are welcome!
 - 🔧 Optimization Settings Interface
 - 📤 Add streaming support
 
+### 0.0.9
+
+- ✨ Optimize the calling method of large models
+- ➕ Add the calling method for Google's Gemini large model
+
 ## 🙏 Acknowledgments
 
 This project is developed based on the following excellent open-source projects:
 
 - [vscode-comment-translate](https://github.com/intellism/vscode-comment-translate) - VSCode comment translation extension
 - [deepl-translate](https://github.com/intellism/deepl-translate) - DeepL translation extension, the source of our base code
+- [deprecated-generative-ai-js](https://github.com/google-gemini/deprecated-generative-ai-js) - Google AI JavaScript SDK for the Gemini API
 
 Special thanks to:
 

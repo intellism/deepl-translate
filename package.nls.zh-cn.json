@@ -1,11 +1,12 @@
 {
     "config.title": "AI Translate Configuration",
-    "config.modelType.desc": "选择大模型类型",
-    "config.largeModelApi.desc": "大模型 API 地址 (OpenAI模式下默认为 https://api.openai.com/v1)",
-    "config.largeModelKey.desc": "大模型 API Key",
-    "config.largeModelName.desc": "大模型名称",
-    "config.largeModelMaxTokens.desc": "大模型最大 token 数量 (仅OpenAI模式下生效)",
-    "config.largeModelTemperature.desc": "大模型温度参数 (仅OpenAI模式下生效)",
+    "config.modelType.desc": "选择大模型类型 (OpenAI 或 Gemini)",
+    "config.largeModelApi.desc": "OpenAI API 地址 (仅 OpenAI 模式下生效，默认为 https://api.openai.com/v1)",
+    "config.largeModelKey.desc": "API Key (OpenAI 或 Gemini)",
+    "config.largeModelName.desc": "模型名称 (Gemini 模式默认使用 gemini-2.0-flash)",
+    "config.largeModelMaxTokens.desc": "最大 token 数量 (仅 OpenAI 模式下生效)",
+    "config.largeModelTemperature.desc": "温度参数 (仅 OpenAI 模式下生效)",
+    "config.streaming.desc": "启用流式传输 (仅 OpenAI 模式下生效)",
     "config.namingRules.desc": "命名规则",
     "config.namingRules.default": "示例: 由AI根据语言模式自动判断",
     "config.namingRules.camelCase": "示例: 驼峰命名法",
@@ -14,5 +15,6 @@
     "config.namingRules.hungarian": "示例: 匈牙利命名法",
     "config.aiTranslate.customTranslatePrompt": "自定义翻译提示词，必须包含 `${targetLang}` 和 `${content}` 参数",
     "config.aiTranslate.customNamingPrompt": "自定义命名提示词，必须包含 `${variableName}`、`${paragraph}`、`${languageId}` 参数",
-    "config.aiTranslate.streaming": "启用流式传输 (仅OpenAI模式下生效)"
+    "config.aiTranslate.streaming": "启用流式传输 (仅OpenAI模式下生效)",
+    "config.aiTranslate.aiNaming": "AI命名"
 }

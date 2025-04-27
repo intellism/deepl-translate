@@ -59,7 +59,7 @@
         },
         "aiTranslate.largeModelName": {
           "type": "string",
-          "default": "",
+          "default": "gpt-3.5-turbo",
           "markdownDescription": "%config.largeModelName.desc%"
         },
         "aiTranslate.largeModelMaxTokens": {
@@ -153,6 +153,7 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.0",
     "axios": "^1.x.x",
     "comment-translate-manager": "latest",
     "querystring": "^0.2.1"
