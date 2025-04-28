@@ -16,5 +16,6 @@
     "config.aiTranslate.customTranslatePrompt": "Custom translation prompt, must include `${targetLang}` and `${content}` parameters",
     "config.aiTranslate.customNamingPrompt": "Custom naming prompt, must include `${variableName}`, `${paragraph}`, `${languageId}` parameters",
     "config.aiTranslate.streaming": "Enable streaming (Only effective in OpenAI mode)",
-    "config.aiTranslate.aiNaming": "AI Naming"
+    "config.aiTranslate.aiNaming": "AI Naming",
+    "config.aiTranslate.filterThinkingContent": "Filter the thinking content of the model"
 }

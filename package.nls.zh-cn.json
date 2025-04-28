@@ -16,5 +16,6 @@
     "config.aiTranslate.customTranslatePrompt": "自定义翻译提示词，必须包含 `${targetLang}` 和 `${content}` 参数",
     "config.aiTranslate.customNamingPrompt": "自定义命名提示词，必须包含 `${variableName}`、`${paragraph}`、`${languageId}` 参数",
     "config.aiTranslate.streaming": "启用流式传输 (仅OpenAI模式下生效)",
-    "config.aiTranslate.aiNaming": "AI命名"
+    "config.aiTranslate.aiNaming": "AI命名",
+    "config.aiTranslate.filterThinkingContent": "过滤思考模型思考内容"
 }

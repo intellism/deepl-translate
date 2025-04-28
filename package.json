@@ -16,6 +16,7 @@
     "comment translate",
     "ai",
     "AI translate",
+    "translate",
     "翻译",
     "注释",
     "翻訳"
@@ -108,6 +109,11 @@
           "type": "boolean",
           "default": false,
           "markdownDescription": "%config.aiTranslate.streaming%"
+        },
+        "aiTranslate.filterThinkingContent": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "%config.aiTranslate.filterThinkingContent%"
         }
       }
     },
