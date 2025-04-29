@@ -1,11 +1,10 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import axios from 'axios'; // 导入 axios 库，用于发送 HTTP 请求
-import * as vscode from 'vscode'; // 导入 VS Code 的所有模块
-import { workspace, window } from 'vscode'; // 从 VS Code 导入 workspace 和 window 模块
-import { ITranslate, ITranslateOptions } from 'comment-translate-manager'; // 导入 ITranslate 和 ITranslateOptions 接口
+import axios from 'axios';
+import * as vscode from 'vscode';
+import { workspace, window } from 'vscode';
+import { ITranslate, ITranslateOptions } from 'comment-translate-manager';
 
-const PREFIXCONFIG = 'aiTranslate'; // 配置前缀，用于获取 AI 翻译相关的配置
-const outputChannel = vscode.window.createOutputChannel('AI Translate'); // 创建输出面板，用于显示调试信息
+const PREFIXCONFIG = 'aiTranslate';
 
 // 获取指定配置项的值
 export function getConfig<T>(key: string): T | undefined {
