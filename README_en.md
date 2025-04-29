@@ -10,6 +10,7 @@ A VSCode code comment translation plugin that supports large language model inte
 
 - 🤖 Supports OpenAI and Gemini invocation methods
 - 🎯 Intelligent naming of functions, classes, variables, and other parameters according to naming conventions
+- 🔄 Translate the information in the problem panel
 - ⌨️ Custom prompts
 - ⚡ Fast translation response
 - 🛠️ Flexible configuration options
@@ -84,6 +85,14 @@ Then, according to the standard specifications and naming rules "${this._default
 Example: Please act as a translator, check if sentences or phrases are accurate, translate naturally, fluently and idiomatically, use professional computer terminology to ensure accurate translation of comments or functions, with no unnecessary additions. Translate the following text to ${targetLang}:\n${content}`
 ```
 
+### Question Panel Information Translation
+
+*Translates warning, error and other information in the problem panel into the selected language*
+
+*⚠️Language support depends on the model you are using*
+
+![问题面板翻译](./image/problemTranslateLang.gif)
+
 ## 🤝 Contributing
 
 Issues and Pull Requests are welcome!
@@ -134,6 +143,10 @@ Issues and Pull Requests are welcome!
 ### 1.0.0
 
 - 🧹 Add function to remove deep thinking content from models
+
+### 1.0.1
+
+- 🔄 Add question panel information translation function
 
 ## 🙏 Acknowledgments
 

@@ -10,6 +10,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Changed
 
+- 🔄 添加问题面板信息翻译功能
+
+## [1.0.1] - 2025-04-30
+
+### Changed
+
 - 🧹 添加去除深度思考模型思考内容功能
 
 ## [1.0.0] - 2025-04-29
