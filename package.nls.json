@@ -18,5 +18,5 @@
     "config.aiTranslate.streaming": "Enable streaming (Only effective in OpenAI mode)",
     "config.aiTranslate.aiNaming": "AI Naming",
     "config.aiTranslate.filterThinkingContent": "Filter deep thinking content",
-    "config.aiTranslate.problemTranslateLang": "Select the target language for translating diagnostic information in the problem panel; none means no translation"
+    "config.aiTranslate.problemTranslateLang": "Select the translation target language for the problem panel information, none means no translation"
 }
