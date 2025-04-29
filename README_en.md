@@ -4,12 +4,12 @@ A VSCode code comment translation plugin that supports large language model inte
 
 ⚠️*This plugin does not provide large language model APIs. Please use your own API and ensure it supports OpenAI's API calling format*
 
-[简体中文](README.md)|[**English**](README_en.md)
+[简体中文](README.md)|[**English**]
 
 ## ✨ Features
 
 - 🤖 Supports OpenAI and Gemini invocation methods
-- 🎯 Intelligent naming of functions, classes, variables, and other parameters according to naming conventions
+- 🎯 Intelligent naming of functions, classes, variables, 和 other parameters according to naming conventions
 - 🔄 Translate the information in the problem panel
 - ⌨️ Custom prompts
 - ⚡ Fast translation response
