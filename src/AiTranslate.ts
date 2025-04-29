@@ -25,7 +25,7 @@ interface TranslateOption {
     customTranslatePrompt?: string;
     customNamingPrompt?: string;
     streaming?: boolean; // 仅 OpenAI 模式使用
-    filterThinkingContent?: boolean; // 是否过滤思考内容
+    filterThinkingContent?: boolean; // 是否过滤深度思考内容
 }
 
 // AiTranslate 类，实现了 ITranslate 接口
@@ -95,7 +95,7 @@ export class AiTranslate implements ITranslate {
         return defaultOption;
     }
 
-    // 过滤思考内容
+    // 过滤深度思考内容
     private filterThinkingContent(text: string): string {
         if (!this._defaultOption.filterThinkingContent) {
             return text;

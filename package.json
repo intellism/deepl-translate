@@ -132,7 +132,8 @@
     "menus": {
       "commentTranslate": [
         {
-          "command": "aiTranslate.aiNaming"
+          "command": "aiTranslate.aiNaming",
+          "title": "%config.aiTranslate.aiNaming%"
         }
       ]
     }
@@ -149,19 +150,19 @@
     "@types/glob": "^7.1.4",
     "@types/mocha": "^9.0.0",
     "@types/node": "14.x",
+    "@types/node-fetch": "^2.6.12",
     "@types/vscode": "^1.96.0",
     "@typescript-eslint/eslint-plugin": "^5.1.0",
     "@typescript-eslint/parser": "^5.1.0",
     "@vscode/test-electron": "^1.6.2",
     "eslint": "^8.1.0",
     "glob": "^7.1.7",
-    "mocha": "^9.1.3",
+    "mocha": "^11.1.0",
     "typescript": "^4.4.4"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.0",
     "axios": "^1.x.x",
-    "comment-translate-manager": "latest",
-    "querystring": "^0.2.1"
+    "comment-translate-manager": "latest"
   }
 }
