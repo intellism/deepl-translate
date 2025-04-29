@@ -4,7 +4,7 @@
 
 ⚠️*本插件不提供大模型API，请自备API，并确保其支持OpenAI的API的调用格式*
 
-[**简体中文**](README.md)|[English](README_en.md)
+[**简体中文**]|[English](README_en.md)
 
 ## ✨ 特性
 
