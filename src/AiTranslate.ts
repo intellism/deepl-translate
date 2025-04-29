@@ -25,6 +25,7 @@ interface TranslateOption {
     customNamingPrompt?: string;
     streaming?: boolean; // 仅 OpenAI 模式使用
     filterThinkingContent?: boolean; // 是否过滤深度思考内容
+    problemTranslateLang?: string; // 新增
 }
 
 // AiTranslate 类，实现了 ITranslate 接口
@@ -89,7 +90,8 @@ export class AiTranslate implements ITranslate {
             customTranslatePrompt: getConfig<string>('customTranslatePrompt'),
             customNamingPrompt: getConfig<string>('customNamingPrompt'),
             streaming: getConfig<boolean>('streaming'),
-            filterThinkingContent: getConfig<boolean>('filterThinkingContent')
+            filterThinkingContent: getConfig<boolean>('filterThinkingContent'),
+            problemTranslateLang: getConfig<string>('problemTranslateLang')
         };
         return defaultOption;
     }
@@ -159,7 +161,7 @@ export class AiTranslate implements ITranslate {
                     const response = await axios.post(url, data, {
                         headers,
                         responseType: 'stream',
-                        timeout: 30000
+                        timeout: 50000
                     });
 
                     let result = '';
@@ -190,7 +192,7 @@ export class AiTranslate implements ITranslate {
                 } else {
                     const res = await axios.post(url, data, {
                         headers,
-                        timeout: 30000
+                        timeout: 50000
                     });
 
                     if (!res.data?.choices?.[0]?.message?.content) {
@@ -278,7 +280,7 @@ export class AiTranslate implements ITranslate {
                     const response = await axios.post(url, data, {
                         headers,
                         responseType: 'stream',
-                        timeout: 30000
+                        timeout: 50000
                     });
 
                     let result = '';
@@ -309,7 +311,7 @@ export class AiTranslate implements ITranslate {
                 } else {
                     const res = await axios.post(url, data, {
                         headers,
-                        timeout: 30000
+                        timeout: 50000
                     });
 
                     if (!res.data?.choices?.[0]?.message?.content) {

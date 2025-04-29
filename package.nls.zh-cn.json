@@ -17,5 +17,6 @@
     "config.aiTranslate.customNamingPrompt": "自定义命名提示词，必须包含 `${variableName}`、`${paragraph}`、`${languageId}` 参数",
     "config.aiTranslate.streaming": "启用流式传输 (仅OpenAI模式下生效)",
     "config.aiTranslate.aiNaming": "AI命名",
-    "config.aiTranslate.filterThinkingContent": "过滤深度思考内容"
+    "config.aiTranslate.filterThinkingContent": "过滤深度思考内容",
+    "config.aiTranslate.problemTranslateLang": "选择问题面板诊断信息的翻译目标语言，none为不翻译"
 }
