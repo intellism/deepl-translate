@@ -2,7 +2,7 @@
 
 A VSCode code comment translation plugin that supports large language model integration, serving as a translation source extension for [Comment Translate](https://marketplace.visualstudio.com/items?itemName=intellsmi.comment-translate)
 
-⚠️*This plugin does not provide large language model APIs. Please use your own API and ensure it supports OpenAI's API calling format*
+⚠️*This plugin does not provide a large model Key, please prepare your own Key*
 
 [简体中文](README.md)|[**English**]
 
