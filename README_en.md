@@ -1,23 +1,23 @@
 # Comment Translate AI
 
-A VSCode code comment translation plugin that supports large model invocation, serving as a translation source extension for [Comment Translate](https://marketplace.visualstudio.com/items?itemName=intellsmi.comment-translate)
+A VSCode code comment translation plugin that supports large language model integration, serving as a translation source extension for [Comment Translate](https://marketplace.visualstudio.com/items?itemName=intellsmi.comment-translate)
 
-⚠️*This plugin does not provide a large model API. Please prepare your own API and ensure it supports the calling format of OpenAI's API*
+⚠️*This plugin does not provide large language model APIs. Please use your own API and ensure it supports OpenAI's API calling format*
 
 [简体中文](README.md)|[**English**](README_en.md)
 
 ## ✨ Features
 
-- 🤖 Adopts OpenAI API standards
-- 🎯 Intelligent naming of parameters such as functions, classes, and variables, optimizing names according to naming conventions
-- ⌨️ Custom Prompt Words
+- 🤖 Supports OpenAI and Gemini invocation methods
+- 🎯 Intelligent naming of functions, classes, variables, and other parameters according to naming conventions
+- ⌨️ Custom prompts
 - ⚡ Fast translation response
 - 🛠️ Flexible configuration options
 
 ## 📦 Installation
 
 1. Install [Comment Translate](https://marketplace.visualstudio.com/items?itemName=intellsmi.comment-translate)
-2. Install this extension[Comment Translate for AI](https://marketplace.visualstudio.com/items?itemName=Cheng-MaoMao.ai-powered-comment-translate-extension&ssr=false#overview)
+2. Install this plugin [Comment Translate for AI](https://marketplace.visualstudio.com/items?itemName=Cheng-MaoMao.ai-powered-comment-translate-extension&ssr=false#overview)
 3. Open the command palette in VS Code (Ctrl+Shift+P)
 4. Type "Comment Translate: Change translation source"
 5. Select "AI Translate" as the translation source
@@ -26,50 +26,54 @@ A VSCode code comment translation plugin that supports large model invocation, s
 
 Configure the following options in VS Code settings:
 
-|                Option                |                                                                   Description                                                                   |               Default               |
-| :-----------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------: |
-|     `aiTranslate.largeModelApi`     |                                                             Large model API endpoint                                                             |                  -                  |
-|     `aiTranslate.largeModelKey`     |                                                                     API key                                                                     |                  -                  |
-|    `aiTranslate.largeModelName`    |                                                                    Model name                                                                    |                  -                  |
-|  `aiTranslate.largeModelMaxTokens`  |                                                        Maximum tokens (0 means unlimited)                                                        |                 2048                 |
-| `aiTranslate.largeModelTemperature` | The temperature parameter of a large model<br />(a lower value produces more certain results, while a higher value yields more diverse outcomes) |                 0.2                 |
-|      `aiTranslate.namingRules`      |                                                                Naming Conventions                                                                | Translation: Determined by AI itself |
+|                Option                |                                                                   Description                                                                   |          Default          |
+| :-----------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------: |
+|     `aiTranslate.largeModelApi`     |                                                             Large model API endpoint                                                             |             -             |
+|     `aiTranslate.largeModelKey`     |                                                                     API key                                                                     |             -             |
+|    `aiTranslate.largeModelName`    |                                                                    Model name                                                                    |             -             |
+|  `aiTranslate.largeModelMaxTokens`  |                                                                  Maximum tokens                                                                  |            2048            |
+| `aiTranslate.largeModelTemperature` | The temperature parameter for the large model<br />(lower values produce more deterministic results, higher values produce more diverse results) |            0.5            |
+|      `aiTranslate.namingRules`      |                                                                   Naming rules                                                                   | default (determined by AI) |
+|       `aiTranslate.modelType`       |                                                                 Large model type                                                                 |           OpenAI           |
+| `aiTranslate.filterThinkingContent` |                                                           Filter deep thinking content                                                           |           False           |
 
 ## 🚀 Quick Start
 
-1. Please configure the API-related information and ensure that the large model service provider you are using is compatible with OpenAI's API call format
+1. Configure API-related information. Please ensure that your large model service provider is compatible with OpenAI's API calling format
    [OpenAI Official Documentation](https://platform.openai.com/docs/api-reference/chat)
-   ![配置](./image/setting.png)
-2. Once configuration is complete, please execute the "Comment Translate" command from the "Comment Translate:Change translate source" section
-   ![换源](./image/change.png)
+   *For users in mainland China, [DeepSeek](https://platform.deepseek.com/) is recommended*
+   ![Configuration](./image/setting.png)
+2. After configuration, call the "Comment Translate:Change translate source" command from "Comment Translate"
+   ![Change source](./image/change.png)
 3. Select "AI translate" as the translation source
-   ![选择](./image/select.png)
+   ![Select](./image/select.png)
 
-### How to use "AI Naming"
+### How to use "AI naming"
 
-* Right-click the mouse→Select "Comment Translation" from the list→Click "AI Naming" to use it
-* Translate the naming according to the selected naming format into English
-* Optimize naming according to the naming convention
-  ![AI命名](./image/AI%20Naming.gif)
+* Right-click → Select "Comment Translation" from the list → Click "AI naming"
+* Translates names to English according to the selected naming format
+* Optimizes naming according to the naming format
+  ![AI naming](./image/AI%20Naming.gif)
 
 ### Custom AI prompts
 
-*The prompt must include the following parameters, which will be automatically retrieved by the plugin*
+*Prompts must include the following parameters, which will be automatically retrieved by the plugin*
 
-**Custom Naming Prompt**
+**Custom naming prompts**
 
 |               Parameter               |                       Description                       |          |
 | :------------------------------------: | :-----------------------------------------------------: | -------- |
 |          `${variableName}`          |       The variable name currently being processed       | Required |
 |            `${paragraph}`            |       The paragraph where the variable is located       | Required |
 |           `${languageId}`           |       The language identifier of the current file       | Required |
-| `${this._defaultOption.namingRules}` | Naming Rules (controlled by Ai Translate: Naming Rules) | Optional |
+| `${this._defaultOption.namingRules}` | Naming rules (controlled by AI Translate: Naming Rules) | Optional |
 
 ```
-Example:Please determine whether "${variableName}" in "${paragraph}" is a class name, method name, function name, or other based on ${languageId}. Then, according to the standard specifications of ${languageId} and the naming rules "${this._defaultOption.namingRules}", translate "${variableName}" into English using professional language, and directly return the translated result of "${variableName}" without any explanation or special symbols.
+Example: Please determine whether "${variableName}" in "${paragraph}" is a class name, method name, function name, or other type based on ${languageId}.
+Then, according to the standard specifications and naming rules "${this._defaultOption.namingRules}" for ${languageId}, translate "${variableName}" into English using professional terminology, and directly return the translation result for "${variableName}" without any explanation or special symbols.
 ```
 
-**Custom translation prompt words**
+**Custom translation prompts**
 
 |     Parameter     |             Description             |          |
 | :---------------: | :---------------------------------: | -------- |
@@ -77,7 +81,7 @@ Example:Please determine whether "${variableName}" in "${paragraph}" is a class 
 |  `${content}`  |      Content to be translated      | Required |
 
 ```
-Example:Please act as a translator, check if the sentences or words are accurate, translate naturally, smoothly, and idiomatically, use professional computer terminology for accurate translation of comments or functions, no additional unnecessary additions are needed. Translate the following text into ${targetLang}:\n${content}`
+Example: Please act as a translator, check if sentences or phrases are accurate, translate naturally, fluently and idiomatically, use professional computer terminology to ensure accurate translation of comments or functions, with no unnecessary additions. Translate the following text to ${targetLang}:\n${content}`
 ```
 
 ## 🤝 Contributing
@@ -89,12 +93,12 @@ Issues and Pull Requests are welcome!
 ### 0.0.1
 
 - 🎉 Initialize project
-- ✨ Implement basic translation
+- ✨ Implement basic translation functionality
 - 🔧 Add configuration options
 
 ### 0.0.2
 
-- 🔧 Modify setting name
+- 🔧 Modify setting names
 
 ### 0.0.3
 
@@ -102,36 +106,40 @@ Issues and Pull Requests are welcome!
 
 ### 0.0.4
 
-- 🤖 Add an AI naming feature that allows the AI to intelligently assign names to parameters such as variables, functions, and classes based on your settings or its own judgment
-- 🌐 Added configuration files for multilingual environments
+- 🤖 Add AI naming feature, allowing AI to intelligently name variables, functions, classes, and other parameters based on your settings or its own judgment
+- 🌐 Add configuration files for multilingual environments
 
 ### 0.0.5
 
-- 🔍 "Debug feature" has been added in the plugin settings
+- 🔍 Add "debug function" in plugin settings
 
 ### 0.0.6
 
-- 🤖 Optimized AI prompts
+- 🤖 Optimize AI prompts
 
 ### 0.0.7
 
-- ✨ The feature for adding custom AI prompts has been added [#1](https://github.com/Cheng-MaoMao/comment-translate-ai/issues/1)
+- ✨ Add custom AI prompts feature [#1](https://github.com/Cheng-MaoMao/comment-translate-ai/issues/1)
 
 ### 0.0.8
 
-- 🔧 Optimization Settings Interface
+- 🔧 Optimize settings interface
 - 📤 Add streaming support
 
 ### 0.0.9
 
-- ✨ Optimize the calling method of large models
-- ➕ Add the calling method for Google's Gemini large model
+- 🔄 Optimize large model calling method
+- ➕ Add Google Gemini large model calling method
+
+### 1.0.0
+
+- 🧹 Add function to remove deep thinking content from models
 
 ## 🙏 Acknowledgments
 
 This project is developed based on the following excellent open-source projects:
 
-- [vscode-comment-translate](https://github.com/intellism/vscode-comment-translate) - VSCode comment translation extension
+- [vscode-comment-translate](https://github.com/intellism/vscode-comment-translate) - VSCode comment translation plugin
 - [deepl-translate](https://github.com/intellism/deepl-translate) - DeepL translation extension, the source of our base code
 - [deprecated-generative-ai-js](https://github.com/google-gemini/deprecated-generative-ai-js) - Google AI JavaScript SDK for the Gemini API
 

@@ -145,7 +145,7 @@ export class AiTranslate implements ITranslate {
                         role: "user",
                         content: promptContent
                     }],
-                    temperature: this._defaultOption.largeModelTemperature || 0.2,
+                    temperature: this._defaultOption.largeModelTemperature || 0.5,
                     max_tokens: this._defaultOption.largeModelMaxTokens,
                     stream: this._defaultOption.streaming
                 };
@@ -264,7 +264,7 @@ export class AiTranslate implements ITranslate {
                         role: "user",
                         content: promptContent
                     }],
-                    temperature: this._defaultOption.largeModelTemperature || 0.2,
+                    temperature: this._defaultOption.largeModelTemperature || 0.5,
                     max_tokens: this._defaultOption.largeModelMaxTokens,
                     stream: this._defaultOption.streaming
                 };

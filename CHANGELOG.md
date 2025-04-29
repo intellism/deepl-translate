@@ -10,6 +10,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Changed
 
+- 🧹 添加去除深度思考模型思考内容功能
+
+## [1.0.0] - 2025-04-29
+
+### Changed
+
 - ✨ 优化大模型调用方式
 - ➕ 添加谷歌Gemini大模型调用方式
 
