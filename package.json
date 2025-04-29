@@ -1,7 +1,7 @@
 {
   "name": "ai-powered-comment-translate-extension",
   "displayName": "Comment Translate for AI",
-  "description": "This is the translation source extension for the Comment Translate plugin, which supports calls to large models compatible with the OpenAI API",
+  "description": "This is the translation source extension for the Comment Translate plugin, which supports calls to large models compatible with the OpenAI API and Gemini",
   "version": "1.0.1",
   "publisher": "Cheng-MaoMao",
   "engines": {
