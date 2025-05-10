@@ -139,7 +139,28 @@ export class AiTranslate implements ITranslate {
             }
 
             if (this._defaultOption.modelType === 'OpenAI') {
-                let url = `${this._defaultOption.largeModelApi}/chat/completions`.replace(/\/+/g, '/');
+                let url; // 在这里声明 url
+                let apiUrl = this._defaultOption.largeModelApi;
+                const endpoint = '/chat/completions'; // 标准端点
+
+                if (apiUrl.endsWith(endpoint)) {
+                    url = apiUrl;
+                } else {
+                    // 移除末尾所有斜杠后拼接标准端点
+                    url = `${apiUrl.replace(/\/+$/, '')}${endpoint}`;
+                }
+
+                // 规范化协议和路径中的斜杠
+                // 1. 修正协议中的单斜杠 (e.g., "http:/" to "http://")
+                url = url.replace(/^http:\/(?!\/)/, 'http://').replace(/^https:\/(?!\/)/, 'https://');
+                // 2. 分离协议和路径，并清理路径中的多余斜杠
+                const parts = url.split('://');
+                if (parts.length === 2) {
+                    const protocol = parts[0];
+                    const rest = parts[1].replace(/\/\/+/g, '/'); // 将路径中连续的多个斜杠替换为单个斜杠
+                    url = `${protocol}://${rest}`;
+                }
+                // 如果 URL 格式不符合 protocol://path 的形式，则保持原样，依赖后续 axios 报错
 
                 const data = {
                     model: this._defaultOption.largeModelName,
@@ -258,7 +279,28 @@ export class AiTranslate implements ITranslate {
             }
 
             if (this._defaultOption.modelType === 'OpenAI') {
-                let url = `${this._defaultOption.largeModelApi}/chat/completions`.replace(/\/+/g, '/');
+                let url; // 在这里声明 url
+                let apiUrl = this._defaultOption.largeModelApi;
+                const endpoint = '/chat/completions'; // 标准端点
+
+                if (apiUrl.endsWith(endpoint)) {
+                    url = apiUrl;
+                } else {
+                    // 移除末尾所有斜杠后拼接标准端点
+                    url = `${apiUrl.replace(/\/+$/, '')}${endpoint}`;
+                }
+
+                // 规范化协议和路径中的斜杠
+                // 1. 修正协议中的单斜杠 (e.g., "http:/" to "http://")
+                url = url.replace(/^http:\/(?!\/)/, 'http://').replace(/^https:\/(?!\/)/, 'https://');
+                // 2. 分离协议和路径，并清理路径中的多余斜杠
+                const parts = url.split('://');
+                if (parts.length === 2) {
+                    const protocol = parts[0];
+                    const rest = parts[1].replace(/\/\/+/g, '/'); // 将路径中连续的多个斜杠替换为单个斜杠
+                    url = `${protocol}://${rest}`;
+                }
+                // 如果 URL 格式不符合 protocol://path 的形式，则保持原样，依赖后续 axios 报错
 
                 const data = {
                     model: this._defaultOption.largeModelName,
