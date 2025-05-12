@@ -148,6 +148,10 @@ Issues and Pull Requests are welcome!
 
 - 🔄 Add question panel information translation function
 
+### 1.0.2
+
+- 🔧 Fix bugs [#5](https://github.com/Cheng-MaoMao/comment-translate-ai/issues/5)
+
 ## 🙏 Acknowledgments
 
 This project is developed based on the following excellent open-source projects:
