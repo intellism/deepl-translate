@@ -78,12 +78,16 @@ export class DeepLTranslate implements ITranslate {
         const data = {
             text: content,
             'target_lang': convertLang(to),
-            'auth_key': this._defaultOption.authKey,
             'preserve_formatting': this._defaultOption.preserveFormatting,
             formality: this._defaultOption.formality
         };
 
-        let res = await axios.post<Response>(url,querystring.stringify(data));
+        const headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': `DeepL-Auth-Key ${this._defaultOption.authKey}`,
+        };
+
+        let res = await axios.post<Response>(url, querystring.stringify(data), { headers });
 
         return res.data.translations[0].text;
     }
@@ -98,7 +102,6 @@ export class DeepLTranslate implements ITranslate {
         return true;
     }
 }
-
 
 
 
