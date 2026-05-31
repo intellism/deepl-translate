@@ -2,7 +2,7 @@
   "name": "deepl-translate",
   "displayName": "deepl-translate",
   "description": "deepl translate source for comment-translate",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "intellsmi",
   "engines": {
     "vscode": "^1.63.0"
